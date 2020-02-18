@@ -1,4 +1,66 @@
 #!/usr/bin/env ruby
 
-require 'asciidoc-publishing-toolbox'
-puts HelloWorld.hi
+require 'optparse'
+require 'asciidoc_publishing_toolbox'
+
+
+Version = '0.0.0'.freeze
+EXECUTABLE_NAME = 'asciidoc-publishing-toolbox'.freeze
+
+subtext = <<~HELP
+  Commonly used command are:
+     init :    Initializes a new empty document
+  See '#{EXECUTABLE_NAME} COMMAND --help' for more information on a specific command.
+HELP
+
+ARGV << '-h' if ARGV.empty?
+
+options = {
+  directory: Dir.pwd,
+  overwrite: false
+}
+global = OptionParser.new do |opts|
+  opts.banner = "Usage: #{EXECUTABLE_NAME} [options] [subcommand [options]]"
+  opts.on('-V', '--[no-]verbose', 'Run verbosely') do |v|
+    options[:verbose] = v
+  end
+  opts.separator "\n"
+  opts.separator subtext
+end
+
+subcommands = {
+  'init' => OptionParser.new do |opts|
+    opts.banner = 'Usage: init [options]'
+    opts.on('-d DIR', '--directory DIR', 'Set the output directory (default: current directory)') do |d|
+      options[:directory] = d
+    end
+    opts.on('-o', '--overwrite', 'If the output directory is not empty, overwrite its content') do |o|
+      options[:overwrite] = o
+    end
+  end
+}
+
+global.order!
+command = ARGV.shift
+if command.nil? || command.empty?
+  puts 'You must specify a command'
+  puts 'Use --help or -h to get a list of available commands'
+  return
+end
+
+begin
+  subcommands[command].order!
+rescue NoMethodError
+  puts "The given command wasn't found"
+  puts 'Use --help or -h to get a list of available commands'
+  return
+end
+
+case command
+when 'init'
+  AsciiDocPublishingToolbox.init options[:directory], {overwrite: options[:overwrite]}
+else
+  puts "The given command wasn't found"
+  puts 'Use --help or -h to get a list of available commands'
+end
+

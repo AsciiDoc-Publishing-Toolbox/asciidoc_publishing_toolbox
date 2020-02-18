@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://espositoandrea.github.io/document.schema.json",
+  "title": "AsciiDoc Document",
+  "description": "An AsciiDoc document to be converted by the AsciiDoc Publishing Toolbox",
+  "type": "object",
+  "properties": {
+    "title": {
+      "description": "The title of the work",
+      "type": "string"
+    },
+    "authors": {
+      "description": "The authors of the document",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The author name",
+            "type": "string"
+          },
+          "surname": {
+            "description": "The author surname",
+            "type": "string"
+          },
+          "middlename": {
+            "description": "The author middlename",
+            "type": "string"
+          },
+          "email": {
+            "description": "The author email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "surname"
+        ],
+        "uniqueItems": true
+      }
+    },
+    "version": {
+      "description": "The document's version/edition",
+      "type": "object",
+      "properties": {
+        "number": {
+          "description": "The version number",
+          "type": "string"
+        },
+        "date": {
+          "description": "The version date",
+          "type": "string"
+        },
+        "note": {
+          "description": "A note about the version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "number"
+      ]
+    }
+  },
+  "required": [
+    "title"
+  ]
+}
