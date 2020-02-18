@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'asciidoc-publishing-toolbox'
+puts HelloWorld.hi

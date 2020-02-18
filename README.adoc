@@ -1,3 +1,4 @@
 = AsciiDoc Publishing Toolbox
 Andrea Esposito <esposito_andrea99@hotmail.com>
 v0.0.0, 18 february 2020: Initial commit
+:doctype: article
