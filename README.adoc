@@ -2,3 +2,13 @@
 Andrea Esposito <esposito_andrea99@hotmail.com>
 v0.0.0, 18 february 2020: Initial commit
 :doctype: article
+:toc: left
+
+== About the Project
+
+ADPT (AsciiDoc Publishing Toolbox) is a simple publishing tool based on
+AsciiDoc.
+
+The goal is to create a tool with an interface that's similar to the one saw in
+various package managers (like Node's `npm` or PHP's `composer`) specialized in
+the creation, management and publishing of documents.
