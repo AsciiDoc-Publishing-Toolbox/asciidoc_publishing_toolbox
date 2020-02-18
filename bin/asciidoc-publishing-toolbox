@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 require 'asciidoc_publishing_toolbox'
+require 'utils'
 
 
-Version = '0.0.0'.freeze
-EXECUTABLE_NAME = 'asciidoc-publishing-toolbox'.freeze
+Version = '0.0.0'
+EXECUTABLE_NAME = 'asciidoc-publishing-toolbox'
 
 subtext = <<~HELP
   Commonly used command are:
@@ -58,7 +60,10 @@ end
 
 case command
 when 'init'
-  AsciiDocPublishingToolbox.init options[:directory], {overwrite: options[:overwrite]}
+  title = Utils.gets_not_empty 'Insert the document title:', 'No title inserted'
+  authors = Utils.get_authors_input
+
+  AsciiDocPublishingToolbox.init dir: options[:directory], overwrite: options[:overwrite], title: title, authors: authors
 else
   puts "The given command wasn't found"
   puts 'Use --help or -h to get a list of available commands'
