@@ -7,7 +7,7 @@ require 'utils'
 
 
 Version = '0.0.0'
-EXECUTABLE_NAME = 'asciidoc-publishing-toolbox'
+EXECUTABLE_NAME = 'adpt'
 
 subtext = <<~HELP
   Commonly used command are:
