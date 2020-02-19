@@ -1,5 +1,11 @@
+# frozen_string_literal: true
+
 # A utility class
 class ADPTUtilities
+  # Get an input from the user
+  #
+  # @param [String] prompt A message to prompt to the user
+  # @return [String] The value given by the user (chomped).
   def self.get_input(prompt = '')
     print prompt + ' '
     input = gets
@@ -21,6 +27,10 @@ class ADPTUtilities
     input
   end
 
+  # Get a list of author in input from the user
+  #
+  # @return [Array<DocumentConfiguration::Author>] An array containing the
+  #   given authors
   def self.get_authors_input
     input = []
     loop do

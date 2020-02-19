@@ -6,16 +6,8 @@ require 'json'
 #
 # This class exposes an interface to define a new configuration that's compliant
 # with the schema document.schema.json.
-#
-# @field [String] title The document title
-# @field [Array<DocumentConfiguration::Author>] authors The document authors
 class DocumentConfiguration
   # The representation of an author.
-  #
-  # @field [String] first_name The author's name
-  # @field [String] surname The author's surname
-  # @field [String] email The author's email
-  # @field [String] middle_name The author's middle name
   class Author
     # Create a new Author
     #
@@ -35,7 +27,7 @@ class DocumentConfiguration
     #
     # @param [String] str The input string
     # @return [Hash, nil] nil if str is not an author, the author hash otherwise.
-    # @raise [ArgumentError] see DocumentConfiguration::Author#initialize
+    # @raise [ArgumentError] see {#initialize}
     def self.from_string(str)
       return nil if str.nil? || str.strip.empty?
 
@@ -100,6 +92,9 @@ class DocumentConfiguration
     @authors = validate_author_list authors unless authors.nil?
   end
 
+  # Check if the document is valid
+  #
+  # @return [Boolean] true if the object represents a valid object.
   def check_if_valid
     !@title.nil? && !@title.empty? && !@authors.nil? && !@authors.empty?
   end
