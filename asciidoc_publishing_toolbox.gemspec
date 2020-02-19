@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'asciidoc_publishing_toolbox'
-  s.version = '0.0.0'
+  s.version = '0.0.1'
   s.license = 'GPL-3.0'
   s.summary = 'A publishing toolbox for AsciiDoc'
   s.description = 'An authoring and publishing system for the AsciiDoc markdown language'

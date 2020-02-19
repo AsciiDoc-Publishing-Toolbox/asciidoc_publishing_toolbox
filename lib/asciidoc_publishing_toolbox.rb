@@ -29,6 +29,13 @@ class AsciiDocPublishingToolbox
     end
   end
 
+  # Check if a directory can be used to create a document.
+  #
+  # @param [String] dir The target directory. If this directory does not exists
+  #   it will be created.
+  # @param [Boolean] overwrite Whether or not the files in an existing target
+  #   directory can be eventually overwritten by the new document
+  # @raise [ArgumentError] if the given directory exists and overwrite is false.
   def self.check_target_directory(dir, overwrite = false)
     overwrite ||= false
     FileUtils.mkdir_p dir unless Dir.exist?(dir)
