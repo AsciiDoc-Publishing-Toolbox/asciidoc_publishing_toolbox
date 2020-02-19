@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'fileutils'
 require 'document_configuration'
 
@@ -19,19 +20,20 @@ class AsciiDocPublishingToolbox
   #   the :overwrite option was not given
   def self.init(opts = {})
     opts[:dir] ||= Dir.pwd
-    FileUtils.mkdir_p dir unless Dir.exist?(opts[:dir])
-    opts[:overwrite] ||= false
-    unless opts[:overwrite] || Dir.empty?(opts[:dir])
-      raise ArgumentError, 'The given directory exists and is not empty'
-    end
+    check_target_directory opts[:dir], opts[:overwrite]
 
-    document_configuration = DocumentConfiguration.new
-    document_configuration.title = opts[:title]
-
-    document_configuration.authors = opts[:authors].map { |author| DocumentConfiguration::Author.new(author[:name], author[:surname], author[:email], author[:middlename]) }
+    document_configuration = DocumentConfiguration.new opts[:title], opts[:authors]
 
     File.open(File.join(opts[:dir], 'document.json'), 'w') do |f|
       f.write(document_configuration.to_json)
     end
+  end
+
+  def self.check_target_directory(dir, overwrite = false)
+    overwrite ||= false
+    FileUtils.mkdir_p dir unless Dir.exist?(dir)
+    return if overwrite || Dir.empty?(dir)
+
+    raise ArgumentError, 'The given directory exists and is not empty'
   end
 end

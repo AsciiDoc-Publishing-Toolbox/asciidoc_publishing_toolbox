@@ -3,7 +3,7 @@
 
 require 'optparse'
 require 'asciidoc_publishing_toolbox'
-require 'utils'
+require 'adpt_utilities'
 
 
 Version = '0.0.0'
@@ -60,8 +60,9 @@ end
 
 case command
 when 'init'
-  title = Utils.gets_not_empty 'Insert the document title:', 'No title inserted'
-  authors = Utils.get_authors_input
+  AsciiDocPublishingToolbox.check_target_directory options[:directory], options[:overwrite]
+  title = ADPTUtilities.gets_not_empty 'Insert the document title:', 'No title inserted'
+  authors = ADPTUtilities.get_authors_input
 
   AsciiDocPublishingToolbox.init dir: options[:directory], overwrite: options[:overwrite], title: title, authors: authors
 else

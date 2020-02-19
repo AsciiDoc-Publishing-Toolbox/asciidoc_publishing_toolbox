@@ -62,6 +62,7 @@
     }
   },
   "required": [
-    "title"
+    "title",
+    "authors"
   ]
 }
