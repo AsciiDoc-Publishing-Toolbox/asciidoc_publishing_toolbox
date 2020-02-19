@@ -1,8 +1,11 @@
 = AsciiDoc Publishing Toolbox
 Andrea Esposito <esposito_andrea99@hotmail.com>
 v0.0.0, 18 february 2020: Initial commit
+:source-highlighter: rouge
 :doctype: article
 :toc: left
+
+image:https://badge.fury.io/rb/asciidoc_publishing_toolbox.svg["Gem Version", link="https://badge.fury.io/rb/asciidoc_publishing_toolbox"]
 
 == About the Project
 
@@ -12,3 +15,15 @@ AsciiDoc.
 The goal is to create a tool with an interface that's similar to the one saw in
 various package managers (like Node's `npm` or PHP's `composer`) specialized in
 the creation, management and publishing of documents.
+
+== How to install
+
+The installation process it's simple. You just need to ensure that Ruby is
+installed on your system. Once done, you can install it from RubyGems using the
+following command.
+
+[source,shell]
+---------------
+# Depending on your system, this may require admin privileges
+gem install asciidoc_publishing_toolbox
+---------------
