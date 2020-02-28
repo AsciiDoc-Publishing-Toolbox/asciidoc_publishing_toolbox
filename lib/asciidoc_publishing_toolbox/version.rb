@@ -4,6 +4,6 @@ module AsciiDocPublishingToolbox
   VERSION = '0.0.2.alpha'
 
   def self.adpt_major_version
-    @adpt_major_version ||= VERSION.split(".").first.to_i
+    @adpt_major_version ||= VERSION.split('.').first.to_i
   end
 end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'asciidoc_publishing_toolbox/document_configuration'
-require 'asciidoc_publishing_toolbox/document'
 require 'asciidoctor'
 require 'asciidoctor-pdf'
+require 'asciidoc_publishing_toolbox/document_configuration'
+require 'asciidoc_publishing_toolbox/document'
 
-# The main class
+# The main module
 module AsciiDocPublishingToolbox
   module_function
 

@@ -74,7 +74,7 @@ end
 
 case command
 when :init
-  Utilities.check_target_directory options[:directory], options[:overwrite], true
+  AsciiDocPublishingToolbox::Utilities.check_target_directory options[:directory], options[:overwrite], true
   title = Utilities.gets_not_empty 'Insert the document title:', 'No title inserted'
   authors = Utilities.get_authors_input
 
