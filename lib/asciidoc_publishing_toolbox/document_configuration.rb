@@ -9,8 +9,18 @@ module AsciiDocPublishingToolbox
   # This class exposes an interface to define a new configuration that's compliant
   # with the schema document.schema.json.
   class DocumentConfiguration
-    attr_reader :title, :authors
+    attr_reader :title, :authors, :type, :chapters
     FILE_NAME = 'document.json'
+
+    module DocumentType
+      BOOK = 'book'
+      ARTICLE = 'article'
+
+      def self.value_for_name(name)
+        const_get name.upcase, false
+      end
+    end
+
     # The representation of an author.
     class Author
       attr_reader :first_name, :surname, :email, :middle_name
@@ -112,9 +122,11 @@ module AsciiDocPublishingToolbox
       end
     end
     # Create a new empty document configuration
-    def initialize(title = nil, authors = nil)
-      @title = validate_title title unless title.nil?
-      @authors = validate_author_list authors unless authors.nil?
+    def initialize(opts = { title: nil, authors: nil })
+      @title = validate_title opts[:title] unless opts[:title].nil?
+      @authors = validate_author_list opts[:authors] unless opts[:authors].nil?
+      @type = opts[:type] || DocumentType::BOOK
+      @chapters = opts[:chapters]
     end
 
     # Load an existing configuration
@@ -135,18 +147,16 @@ module AsciiDocPublishingToolbox
       else
         raise ArgumentError, "Unsupported type (#{configuration.class.name}) for 'configuration'" unless configuration.is_a? Hash
       end
-      schemer = JSONSchemer.schema(Pathname.new(File.join(__dir__, '../data/document.schema.json')))
+      schemer = JSONSchemer.schema(Pathname.new(File.join(__dir__, '../document.schema.json')))
       errors = schemer.validate(configuration).to_a
       raise InvalidConfigurationError, errors.to_s unless errors.empty?
 
-      doc_config = DocumentConfiguration.new
-      doc_config.title = configuration['title']
       authors = []
       configuration['authors'].each do |author|
         authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
       end
-      doc_config.authors = authors
-      doc_config
+      type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
+      DocumentConfiguration.new title: configuration['title'], authors: authors, type: type, chapters: configuration['chapters']
     end
 
     # Check if the document is valid
@@ -172,13 +182,18 @@ module AsciiDocPublishingToolbox
       @authors = validate_author_list authors
     end
 
+    def type=(type)
+      @type = type
+    end
+
     # Convert the configuration to an hash object
     #
     # @return [Hash] the hash representation of the configuration
     def to_hash
       {
         title: @title,
-        authors: @authors
+        authors: @authors,
+        chapters: @chapters.map { |chap| { title: chap } }
       }
     end
 

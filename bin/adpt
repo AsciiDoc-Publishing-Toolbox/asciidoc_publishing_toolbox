@@ -75,10 +75,11 @@ end
 case command
 when :init
   AsciiDocPublishingToolbox::Utilities.check_target_directory options[:directory], options[:overwrite], true
-  title = Utilities.gets_not_empty 'Insert the document title:', 'No title inserted'
-  authors = Utilities.get_authors_input
+  title = AsciiDocPublishingToolbox::Utilities.gets_not_empty 'Insert the document title:', 'No title inserted'
+  authors = AsciiDocPublishingToolbox::Utilities.get_authors_input
+  first_chapter = AsciiDocPublishingToolbox::Utilities.gets_not_empty 'Insert the first chapter title:', 'No title inserted'
 
-  AsciiDocPublishingToolbox.init dir: options[:directory], overwrite: options[:overwrite], title: title, authors: authors
+  AsciiDocPublishingToolbox.init dir: options[:directory], overwrite: options[:overwrite], title: title, authors: authors, first_chapter: first_chapter
 
 when :build
   AsciiDocPublishingToolbox.build dir: Pathname.new(options[:directory])
