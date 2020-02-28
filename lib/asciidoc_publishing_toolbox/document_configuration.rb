@@ -132,7 +132,7 @@ module AsciiDocPublishingToolbox
     # Load an existing configuration
     # @param [String,Pathname,Hash] configuration The existing configuration. If
     #   it's a string, it's treated as a JSON string; if it's a Pathname it's
-    #   treated as the path to the file containing the configuration; if it's an
+    #   treated as the path to the directory containing the configuration; if it's an
     #   Hash it's treated as the configuration itself.
     #
     # @raise [ArgumentError] if configuration is not of an accepted type
@@ -186,6 +186,14 @@ module AsciiDocPublishingToolbox
       @type = type
     end
 
+    def self.document?(dir)
+      Dir.exist?(dir) && !Dir.empty?(dir) && File.exist?(File.join(dir, DocumentConfiguration::FILE_NAME))
+    end
+
+    def add_chapter(title, is_part = false)
+      @chapters << { title: title, part: is_part }
+    end
+
     # Convert the configuration to an hash object
     #
     # @return [Hash] the hash representation of the configuration
@@ -193,7 +201,7 @@ module AsciiDocPublishingToolbox
       {
         title: @title,
         authors: @authors,
-        chapters: @chapters.map { |chap| { title: chap } }
+        chapters: @chapters
       }
     end
 

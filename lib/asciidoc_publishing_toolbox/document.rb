@@ -45,7 +45,7 @@ module AsciiDocPublishingToolbox
 
         include::src/colophon.adoc[]
 
-        #{@config.chapters.map { |ch| "include::src/#{ch['title'].downcase.gsub(' ', '-')}.adoc[leveloffset=+1]" }.join("\n\n")}
+        #{@config.chapters.map { |ch| "include::src/#{ch['title'].downcase.gsub(' ', '-')}.adoc[#{'leveloffset=+1' unless ch['part']}]" }.join("\n\n")}
       DOC
     end
 

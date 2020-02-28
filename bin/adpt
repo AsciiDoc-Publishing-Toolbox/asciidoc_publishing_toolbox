@@ -13,6 +13,7 @@ subtext = <<~HELP
   Commonly used command are:
      init  :    Initializes a new empty document
      build :    Builds a an existing document
+     chap  :    Creates a new chapter
   See '#{EXECUTABLE_NAME} COMMAND --help' for more information on a specific command.
 HELP
 
@@ -50,7 +51,19 @@ subcommands = {
     opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
       options[:directory] = d
     end
-    # TODO: Add options
+    # TODO: Add build target options
+  end,
+  chap: OptionParser.new do |opts|
+    opts.banner = 'Usage: chap [options]'
+    opts.on('-t', '--title TITLE', 'Mandatory chapter title') do |t|
+      options[:new_chapter_title] = t
+    end
+    opts.on('-p', '--part', 'Set the chapter as a part') do |t|
+      options[:is_part] = t
+    end
+    opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
+      options[:directory] = d
+    end
   end
 }
 
@@ -83,6 +96,11 @@ when :init
 
 when :build
   AsciiDocPublishingToolbox.build dir: Pathname.new(options[:directory])
+
+when :chap
+  raise OptionParser::MissingArgument if options[:new_chapter_title].nil?
+
+  AsciiDocPublishingToolbox.new_chapter options[:new_chapter_title], dir: options[:directory], is_part: options[:is_part]
 else
   puts "The given command wasn't found"
   puts 'Use --help or -h to get a list of available commands'
