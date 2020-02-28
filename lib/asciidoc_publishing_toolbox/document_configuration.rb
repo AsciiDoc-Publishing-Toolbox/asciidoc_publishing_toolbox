@@ -9,7 +9,7 @@ module AsciiDocPublishingToolbox
   # This class exposes an interface to define a new configuration that's compliant
   # with the schema document.schema.json.
   class DocumentConfiguration
-    attr_reader :title, :authors, :type, :chapters
+    attr_reader :title, :authors, :type, :chapters, :lang
     FILE_NAME = 'document.json'
 
     module DocumentType
@@ -127,6 +127,7 @@ module AsciiDocPublishingToolbox
       @authors = validate_author_list opts[:authors] unless opts[:authors].nil?
       @type = opts[:type] || DocumentType::BOOK
       @chapters = validate_chapter_list opts[:chapters]
+      @lang = (opts[:lang] || 'en').strip.downcase
     end
 
     # Load an existing configuration
@@ -156,7 +157,9 @@ module AsciiDocPublishingToolbox
         authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
       end
       type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
-      DocumentConfiguration.new title: configuration['title'], authors: authors, type: type, chapters: configuration['chapters']
+      DocumentConfiguration.new title: configuration['title'], authors: authors,
+                                type: type, chapters: configuration['chapters'],
+                                lang: configuration['lang']
     end
 
     # Check if the document is valid
@@ -182,10 +185,6 @@ module AsciiDocPublishingToolbox
       @authors = validate_author_list authors
     end
 
-    def type=(type)
-      @type = type
-    end
-
     def self.document?(dir)
       Dir.exist?(dir) && !Dir.empty?(dir) && File.exist?(File.join(dir, DocumentConfiguration::FILE_NAME))
     end
@@ -201,7 +200,8 @@ module AsciiDocPublishingToolbox
       {
         title: @title,
         authors: @authors,
-        chapters: @chapters
+        chapters: @chapters,
+        lang: @lang
       }
     end
 

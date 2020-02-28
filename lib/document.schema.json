@@ -87,6 +87,11 @@
           }
         }
       }
+    },
+    "lang": {
+      "description": "The document language (IANA subtag)",
+      "type": "string",
+      "default": "en"
     }
   },
   "required": [

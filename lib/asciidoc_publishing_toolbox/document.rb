@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'faker'
+require 'net/http'
+require 'uri'
 
 module AsciiDocPublishingToolbox
   # A document
@@ -30,6 +31,7 @@ module AsciiDocPublishingToolbox
       # TODO: Add copyright year
       # TODO: Add revision date
       # TODO: Add language
+      lang_url = "https://raw.githubusercontent.com/asciidoctor/asciidoctor/master/data/locale/attributes-#{@config.lang}.adoc"
       <<~DOC
         = #{@config.title}
         #{author_string.join('; ')}
@@ -40,8 +42,8 @@ module AsciiDocPublishingToolbox
         :sectnumsdepth: 5
         :xrefstyle: short
         :copyright-year: 2019--2020
-        // include::../locale/attributes.adoc[]
-        // :lang: en
+        :lang: #{@config.lang}
+        #{Net::HTTP.get(URI.parse(lang_url))}
 
         include::src/colophon.adoc[]
 
@@ -54,8 +56,10 @@ module AsciiDocPublishingToolbox
       <<~COLOPHON
         [colophon#colophon%nonfacing]
         == {doctitle}
-        
+
         Copyright (c) {copyright-year}, {author}.
+
+        _Created using ADPT, the AsciiDoc Publishing Toolbox_.
       COLOPHON
     end
   end

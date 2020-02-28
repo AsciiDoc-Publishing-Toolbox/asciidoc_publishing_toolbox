@@ -26,7 +26,7 @@ module AsciiDocPublishingToolbox
     opts[:dir] ||= Dir.pwd
     Utilities.check_target_directory opts[:dir], opts[:overwrite]
 
-    document_configuration = DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{title: opts[:first_chapter]}]
+    document_configuration = DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{ title: opts[:first_chapter] }]
     document_configuration.write_file opts[:dir]
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
