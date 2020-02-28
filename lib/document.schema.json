@@ -9,6 +9,15 @@
       "description": "The title of the work",
       "type": "string"
     },
+    "type": {
+      "description": "The type of document",
+      "type": "string",
+      "default": "book",
+      "enum": [
+        "book",
+        "article"
+      ]
+    },
     "authors": {
       "description": "The authors of the document",
       "type": "array",

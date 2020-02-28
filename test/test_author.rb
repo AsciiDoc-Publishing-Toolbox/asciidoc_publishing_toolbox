@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'document_configuration'
+require 'asciidoc_publishing_toolbox/document_configuration'
 
 class AuthorTest < MiniTest::Test
   def test_from_string

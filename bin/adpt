@@ -3,15 +3,16 @@
 
 require 'optparse'
 require 'asciidoc_publishing_toolbox'
-require 'adpt_utilities'
+require 'asciidoc_publishing_toolbox/utilities'
+require 'asciidoc_publishing_toolbox/version'
 
 
-Version = '0.0.1'
 EXECUTABLE_NAME = 'adpt'
 
 subtext = <<~HELP
   Commonly used command are:
-     init :    Initializes a new empty document
+     init  :    Initializes a new empty document
+     build :    Builds a an existing document
   See '#{EXECUTABLE_NAME} COMMAND --help' for more information on a specific command.
 HELP
 
@@ -26,12 +27,16 @@ global = OptionParser.new do |opts|
   opts.on('-V', '--[no-]verbose', 'Run verbosely') do |v|
     options[:verbose] = v
   end
+  opts.on('-v', '--version', 'Show version') do
+    puts "#{EXECUTABLE_NAME} -- version #{AsciiDocPublishingToolbox::VERSION}"
+    exit
+  end
   opts.separator "\n"
   opts.separator subtext
 end
 
 subcommands = {
-  'init' => OptionParser.new do |opts|
+  init: OptionParser.new do |opts|
     opts.banner = 'Usage: init [options]'
     opts.on('-d DIR', '--directory DIR', 'Set the output directory (default: current directory)') do |d|
       options[:directory] = d
@@ -39,6 +44,13 @@ subcommands = {
     opts.on('-o', '--overwrite', 'If the output directory is not empty, overwrite its content') do |o|
       options[:overwrite] = o
     end
+  end,
+  build: OptionParser.new do |opts|
+    opts.banner = 'Usage: build [options]'
+    opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
+      options[:directory] = d
+    end
+    # TODO: Add options
   end
 }
 
@@ -50,6 +62,8 @@ if command.nil? || command.empty?
   return
 end
 
+command = command.to_sym
+
 begin
   subcommands[command].order!
 rescue NoMethodError
@@ -59,12 +73,15 @@ rescue NoMethodError
 end
 
 case command
-when 'init'
-  AsciiDocPublishingToolbox.check_target_directory options[:directory], options[:overwrite]
-  title = ADPTUtilities.gets_not_empty 'Insert the document title:', 'No title inserted'
-  authors = ADPTUtilities.get_authors_input
+when :init
+  Utilities.check_target_directory options[:directory], options[:overwrite], true
+  title = Utilities.gets_not_empty 'Insert the document title:', 'No title inserted'
+  authors = Utilities.get_authors_input
 
   AsciiDocPublishingToolbox.init dir: options[:directory], overwrite: options[:overwrite], title: title, authors: authors
+
+when :build
+  AsciiDocPublishingToolbox.build dir: Pathname.new(options[:directory])
 else
   puts "The given command wasn't found"
   puts 'Use --help or -h to get a list of available commands'

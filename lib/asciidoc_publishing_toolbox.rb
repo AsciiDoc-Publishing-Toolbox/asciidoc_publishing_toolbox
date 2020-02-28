@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 require 'fileutils'
-require 'document_configuration'
+require 'asciidoc_publishing_toolbox/document_configuration'
+require 'asciidoc_publishing_toolbox/document'
+require 'asciidoctor'
+require 'asciidoctor-pdf'
 
 # The main class
-class AsciiDocPublishingToolbox
+module AsciiDocPublishingToolbox
+  module_function
 
   # Initialize a directory as a document.
   #
@@ -18,29 +22,24 @@ class AsciiDocPublishingToolbox
   #
   # @raise [ArgumentError] if the given directory exists and is not empty and
   #   the :overwrite option was not given
-  def self.init(opts = {})
+  def init(opts = {})
     opts[:dir] ||= Dir.pwd
-    check_target_directory opts[:dir], opts[:overwrite]
+    Utilities.check_target_directory opts[:dir], opts[:overwrite]
 
     document_configuration = DocumentConfiguration.new opts[:title], opts[:authors]
+    document_configuration.write_file opts[:dir]
 
-    File.open(File.join(opts[:dir], 'document.json'), 'w') do |f|
-      f.write(document_configuration.to_json)
-    end
+    FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
   end
 
-  # Check if a directory can be used to create a document.
-  #
-  # @param [String] dir The target directory. If this directory does not exists
-  #   it will be created.
-  # @param [Boolean] overwrite Whether or not the files in an existing target
-  #   directory can be eventually overwritten by the new document
-  # @raise [ArgumentError] if the given directory exists and overwrite is false.
-  def self.check_target_directory(dir, overwrite = false)
-    overwrite ||= false
-    FileUtils.mkdir_p dir unless Dir.exist?(dir)
-    return if overwrite || Dir.empty?(dir)
+  def build(opts = {})
+    opts[:dir] ||= Dir.pwd
+    document_configuration = DocumentConfiguration.load opts[:dir]
+    dir = File.join(opts[:dir], 'out/')
+    FileUtils.mkdir_p dir unless Dir.exist? dir
+    document = Document.new document_configuration
 
-    raise ArgumentError, 'The given directory exists and is not empty'
+    Asciidoctor.convert document.to_s, backend: 'html', safe: :safe, header_footer: true, to_file: File.join(dir, document.file_name + '.html')
+    Asciidoctor.convert document.to_s, backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(dir, document.file_name + '.pdf'), attributes: { 'pdf-theme' => 'book', 'pdf-themesdir' => File.join(opts[:dir], 'themes'), 'media' => 'prepress' }
   end
 end

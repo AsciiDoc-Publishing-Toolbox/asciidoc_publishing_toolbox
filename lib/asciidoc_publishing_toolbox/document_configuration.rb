@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'json_schemer'
 
 # The document configuration.
 #
 # This class exposes an interface to define a new configuration that's compliant
 # with the schema document.schema.json.
 class DocumentConfiguration
+  attr_reader :title, :authors
+  FILE_NAME = 'document.json'
   # The representation of an author.
   class Author
+    attr_reader :first_name, :surname, :email, :middle_name
     # Create a new Author
     #
     # @param [String] first_name The author's name
@@ -63,6 +67,17 @@ class DocumentConfiguration
       self.class == other.class && to_hash == other.to_hash
     end
 
+    # Convert to string
+    # @return [String] The author string (AsciiDoc-like)
+    def to_s
+      author_string = ''
+      author_string += @first_name
+      author_string += " #{@middle_name}" unless @middle_name.nil? || @middle_name.empty?
+      author_string += " #{@surname}"
+      author_string += " <#{@email}>" unless @email.nil? || @email.empty?
+      author_string
+    end
+
     # Convert the author to JSON
     #
     # @param opts
@@ -86,10 +101,51 @@ class DocumentConfiguration
     end
   end
 
+  # An error that should be raised if a configuration is invalid.
+  class InvalidConfigurationError < StandardError
+    # Initialize the error
+    #
+    # @param msg The message.
+    def initialize(msg="The configuration file is not valid.")
+      super
+    end
+  end
   # Create a new empty document configuration
   def initialize(title = nil, authors = nil)
     @title = validate_title title unless title.nil?
     @authors = validate_author_list authors unless authors.nil?
+  end
+
+  # Load an existing configuration
+  # @param [String,Pathname,Hash] configuration The existing configuration. If
+  #   it's a string, it's treated as a JSON string; if it's a Pathname it's
+  #   treated as the path to the file containing the configuration; if it's an
+  #   Hash it's treated as the configuration itself.
+  #
+  # @raise [ArgumentError] if configuration is not of an accepted type
+  # @return [DocumentConfiguration] The loaded configuration
+  def self.load(configuration)
+    case configuration
+    when String
+      configuration = JSON.parse configuration
+    when Pathname
+      configuration = File.read configuration + FILE_NAME
+      configuration = JSON.parse configuration
+    else
+      raise ArgumentError, "Unsupported type (#{configuration.class.name}) for 'configuration'" unless configuration.is_a? Hash
+    end
+    schemer = JSONSchemer.schema(Pathname.new(File.join(__dir__, '../document.schema.json')))
+    errors = schemer.validate(configuration).to_a
+    raise InvalidConfigurationError, errors.to_s unless errors.empty?
+
+    doc_config = DocumentConfiguration.new
+    doc_config.title = configuration['title']
+    authors = []
+    configuration['authors'].each do |author|
+      authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
+    end
+    doc_config.authors = authors
+    doc_config
   end
 
   # Check if the document is valid
@@ -131,6 +187,15 @@ class DocumentConfiguration
   # @return [String] The JSON representation of the configuration
   def to_json(*opts)
     JSON.pretty_generate(to_hash, *opts)
+  end
+
+  # Write the configuration to a JSON file
+  #
+  # @param [String] directory The directory where the file will be stored
+  def write_file(directory)
+    File.open(File.join(directory, FILE_NAME), 'w') do |f|
+      f.write to_json
+    end
   end
 
   private
