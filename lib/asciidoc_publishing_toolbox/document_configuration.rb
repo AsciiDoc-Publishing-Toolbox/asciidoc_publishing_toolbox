@@ -126,7 +126,7 @@ module AsciiDocPublishingToolbox
       @title = validate_title opts[:title] unless opts[:title].nil?
       @authors = validate_author_list opts[:authors] unless opts[:authors].nil?
       @type = opts[:type] || DocumentType::BOOK
-      @chapters = opts[:chapters]
+      @chapters = validate_chapter_list opts[:chapters]
     end
 
     # Load an existing configuration
@@ -191,7 +191,7 @@ module AsciiDocPublishingToolbox
     end
 
     def add_chapter(title, is_part = false)
-      @chapters << { title: title, part: is_part }
+      @chapters = validate_chapter_list @chapters, { title: title, part: is_part }
     end
 
     # Convert the configuration to an hash object
@@ -223,6 +223,19 @@ module AsciiDocPublishingToolbox
     end
 
     private
+
+    def validate_chapter_list(chapters, new_chap = nil)
+      if new_chap
+        chapters.each do |ch|
+          if ch[:title].downcase.gsub(' ', '-') == title.downcase.gsub(' ', '-')
+            raise ArgumentError, 'The chapter "ID" must be unique (title in lower case, with spaces replaced by hypens "-")'
+          end
+        end
+        chapters << new_chap
+      else
+        return chapters unless chapters.detect { |e| authors.count(e) > 1 }
+      end
+    end
 
     def validate_author_list(authors)
       return authors unless authors.detect { |e| authors.count(e) > 1 }
