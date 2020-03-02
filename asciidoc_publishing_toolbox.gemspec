@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = 'An authoring and publishing system for the AsciiDoc markdown language'
   s.author = 'Andrea Esposito'
   s.email = 'esposito_andrea99@hotmail.com'
-  s.files = Dir.glob('lib/**/*.rb') + %w(LICENSE.md README.adoc)
+  s.files = Dir.glob('lib/**/*') + %w(LICENSE.md README.adoc)
   s.homepage = 'https://github.com/espositoandrea/asciidoc_publishing_toolbox'
   s.add_runtime_dependency 'asciidoctor', '~> 2.0', '>= 2.0.10'
   s.add_runtime_dependency 'asciidoctor-pdf', '~> 1.5', '>= 1.5.3'

@@ -38,10 +38,10 @@ end
 
 subcommands = {
   init: OptionParser.new do |opts|
-    opts.banner = 'Usage: init [options]'
-    opts.on('-d DIR', '--directory DIR', 'Set the output directory (default: current directory)') do |d|
-      options[:directory] = d
-    end
+    opts.banner = 'Usage: init [options] DIR'
+    opts.separator "\nRequired arguments:\n"
+    opts.separator '    DIR    The output directory (if it does not exist, it will be created)'
+    opts.separator "\nOptions:\n"
     opts.on('-o', '--overwrite', 'If the output directory is not empty, overwrite its content') do |o|
       options[:overwrite] = o
     end
@@ -87,6 +87,9 @@ end
 
 case command
 when :init
+  options[:directory] = ARGV.shift
+  raise OptionParser::MissingArgument, 'The DIR argument is missing' unless options[:directory]
+
   AsciiDocPublishingToolbox::Utilities.check_target_directory options[:directory], options[:overwrite], true
   title = AsciiDocPublishingToolbox::Utilities.gets_not_empty 'Insert the document title:', 'No title inserted'
   authors = AsciiDocPublishingToolbox::Utilities.get_authors_input
