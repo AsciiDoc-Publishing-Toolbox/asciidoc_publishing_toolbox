@@ -14,6 +14,7 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
     target_dir = 'TESTING_DIRECTORY/'
 
     expected = {
+      '$schema': 'https://espositoandrea.github.io/adpt-document-schema/document.schema.json',
       title: 'A test document',
       authors: [
         {
@@ -36,11 +37,17 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
           middlename: 'Test',
           email: 'test@test.com'
         }
-      ]
+      ],
+      chapters: [{ title: 'First Chapter Title' }],
+      lang: 'en',
+      copyright: { fromYear: 2020 }
     }
 
-    authors = expected[:authors].map { |el| DocumentConfiguration::Author.new el[:name], el[:surname], el[:email], el[:middlename] }
-    AsciiDocPublishingToolbox.init dir: target_dir, overwrite: true, title: expected[:title], authors: authors
+    authors = expected[:authors].map { |el| AsciiDocPublishingToolbox::DocumentConfiguration::Author.new el[:name], el[:surname], el[:email], el[:middlename] }
+    AsciiDocPublishingToolbox::Utilities.check_target_directory target_dir, true, true
+    AsciiDocPublishingToolbox.init dir: target_dir, overwrite: true, title: expected[:title], authors: authors,
+                                   first_chapter: expected[:chapters][0][:title],
+                                   lang: expected[:lang], copyright: expected[:copyright]
     actual = JSON.parse File.read(File.join(target_dir, 'document.json')), symbolize_names: true
 
     FileUtils.rmtree target_dir
