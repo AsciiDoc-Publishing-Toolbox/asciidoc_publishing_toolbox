@@ -13,7 +13,7 @@ module AsciiDocPublishingToolbox
   class DocumentConfiguration
     attr_reader :title, :authors, :type, :chapters, :lang, :copyright
     FILE_NAME = 'document.json'
-    SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/document.schema.json'
+    SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json'
 
     module DocumentType
       BOOK = 'book'
