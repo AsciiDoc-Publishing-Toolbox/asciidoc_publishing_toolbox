@@ -17,7 +17,7 @@
     <orderEntry type="library" scope="PROVIDED" name="asciidoctor (v2.0.10, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="asciidoctor-pdf (v1.5.3, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v2.1.4, ruby-2.5.5-p157) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.1.5, ruby-2.5.5-p157) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.1.6, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="css_parser (v1.7.1, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ecma-re-validator (v0.2.0, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hana (v1.3.5, ruby-2.5.5-p157) [gem]" level="application" />
@@ -32,6 +32,7 @@
     <orderEntry type="library" scope="PROVIDED" name="prawn-table (v0.2.2, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="prawn-templates (v0.1.2, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="public_suffix (v4.0.3, ruby-2.5.5-p157) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v13.0.1, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="regexp_parser (v1.7.0, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-rc4 (v0.1.5, ruby-2.5.5-p157) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="safe_yaml (v1.0.5, ruby-2.5.5-p157) [gem]" level="application" />
