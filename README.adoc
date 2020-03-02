@@ -27,3 +27,24 @@ following command.
 # Depending on your system, this may require admin privileges
 gem install asciidoc_publishing_toolbox
 ---------------
+
+== How to use
+
+Once installed a new command, `adpt`, will be available. Use `adpt --help` to
+get all the available options and commands. A typical use case would be the
+following:
+
+[source,shell]
+--------------
+# Initialize a new document in the current directory
+adpt init
+
+# Add a new chapter to the document in the current directory
+adpt chap -t "Chapter Title"
+
+# Build the document in the current directory to HTML and PDF
+adpt build
+--------------
+
+You can edit the document configuration using a text editor: it's a JSON file
+that follows the link:https://raw.githubusercontent.com/espositoandrea/AsciiDoc-Publishing-Toolbox/master/lib/document.schema.json[ADPT's Document Schema].
