@@ -120,7 +120,7 @@ module AsciiDocPublishingToolbox
       # Initialize the error
       #
       # @param msg The message.
-      def initialize(msg = "The configuration file is not valid.")
+      def initialize(msg = 'The configuration file is not valid.')
         super
       end
     end
@@ -153,7 +153,16 @@ module AsciiDocPublishingToolbox
         raise ArgumentError, "Unsupported type (#{configuration.class.name}) for 'configuration'" unless configuration.is_a? Hash
       end
 
-      schemer = JSONSchemer.schema(Net::HTTP.get(URI.parse(SCHEMA)))
+      ref_resolver_with_redirects = proc { |uri|
+        # NOTE: This resolver only works with a single redirect
+        r = Net::HTTP.get_response(uri)
+        if r.code == '301'
+          r = Net::HTTP.get_response(URI.parse(r.header['location']))
+        end
+        JSON.parse(r.body)
+      }
+
+      schemer = JSONSchemer.schema(Net::HTTP.get(URI.parse(SCHEMA)), ref_resolver: ref_resolver_with_redirects, insert_property_defaults: true, format: false)
       errors = schemer.validate(configuration).to_a
       raise InvalidConfigurationError, errors.to_s unless errors.empty?
 
