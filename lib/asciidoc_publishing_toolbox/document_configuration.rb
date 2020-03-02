@@ -11,6 +11,7 @@ module AsciiDocPublishingToolbox
   class DocumentConfiguration
     attr_reader :title, :authors, :type, :chapters, :lang
     FILE_NAME = 'document.json'
+    SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/document.schema.json'
 
     module DocumentType
       BOOK = 'book'
@@ -198,6 +199,7 @@ module AsciiDocPublishingToolbox
     # @return [Hash] the hash representation of the configuration
     def to_hash
       {
+        '$schema': DocumentConfiguration::SCHEMA,
         title: @title,
         authors: @authors,
         chapters: @chapters,
