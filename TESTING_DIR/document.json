@@ -1,0 +1,19 @@
+{
+  "$schema": "https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json",
+  "title": "Ciao",
+  "authors": [
+    {
+      "name": "Andrea",
+      "surname": "Esposito"
+    }
+  ],
+  "chapters": [
+    {
+      "title": "Hallo"
+    }
+  ],
+  "lang": "en",
+  "copyright": {
+    "fromYear": 2020
+  }
+}
