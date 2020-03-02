@@ -14,7 +14,7 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
     target_dir = 'TESTING_DIRECTORY/'
 
     expected = {
-      '$schema': 'https://espositoandrea.github.io/adpt-document-schema/document.schema.json',
+      '$schema': 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json',
       title: 'A test document',
       authors: [
         {
