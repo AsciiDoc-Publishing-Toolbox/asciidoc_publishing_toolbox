@@ -37,8 +37,8 @@ following:
 
 [source,shell]
 --------------
-# Initialize a new document in the current directory
-adpt init
+# Initialize a new document in the directory document-folder
+adpt init document-folder
 
 # Add a new chapter to the document in the current directory
 adpt chap -t "Chapter Title"

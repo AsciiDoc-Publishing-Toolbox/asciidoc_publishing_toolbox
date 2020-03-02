@@ -29,100 +29,100 @@ module AsciidoctorPdfExtensions
     scratch? ? ((toc_page_numbers.begin - offset)..toc_page_numbers.end) : toc_page_numbers
   end
 
-  # force chapters to start on new page;
-  # force select chapters to start on the recto (odd-numbered, right-hand) page
-  # def start_new_chapter chapter
-  #   start_new_page unless at_page_top?
-  #   if @ppbook && verso_page? && !(chapter.option? 'nonfacing')
-  #     update_colors # prevents Ghostscript from reporting a warning when running content is written to blank page
-  #     start_new_page
-  #   end
-  # end
-  #
-  # def layout_chapter_title node, title, opts = {}
-  #   if (sect_id = node.id) == 'dedication' || sect_id == 'acknowledgements'
-  #     layout_heading_custom title, align: :center
-  #   elsif sect_id == 'colophon'
-  #     #puts 'Processing ' + node.sectname + '...'
-  #     if node.document.attr? 'media', 'prepress'
-  #       move_down 325
-  #     else
-  #       move_down 460
-  #     end
-  #     layout_heading title, size: @theme.base_font_size
-  #   elsif sect_id.include? 'chapter' # chapters
-  #     #puts 'Processing ' + sect_id + '...'
-  #     # use Akkurat font for all custom headings
-  #     font 'Akkurat' do
-  #       if node.document.attr? 'media', 'prepress'
-  #         move_down 120
-  #       else
-  #         move_down 180
-  #       end
-  #       if @ppbook
-  #         layout_heading 'PART', align: :right, size: 100, style: :normal
-  #       else
-  #         layout_heading 'PART', align: :right, size: 100, color: [91, 54, 8, 13], style: :normal
-  #       end
-  #       move_up 40
-  #
-  #       part_number = 'ONE'
-  #       if sect_id.include? 'chapter-2'
-  #         part_number = 'TWO'
-  #       elsif sect_id.include? 'chapter-3'
-  #         part_number = 'THREE'
-  #       elsif sect_id.include? 'chapter-4'
-  #         part_number = 'FOUR'
-  #       elsif sect_id.include? 'chapter-5'
-  #         part_number = 'FIVE'
-  #       elsif sect_id.include? 'chapter-6'
-  #         part_number = 'SIX'
-  #       elsif sect_id.include? 'chapter-7'
-  #         part_number = 'SEVEN'
-  #       elsif sect_id.include? 'chapter-8'
-  #         part_number = 'EIGHT'
-  #       elsif sect_id.include? 'chapter-9'
-  #         part_number = 'NINE'
-  #       elsif sect_id.include? 'chapter-10'
-  #         part_number = 'TEN'
-  #       end
-  #       if @ppbook
-  #         layout_heading part_number, align: :right, size: 100, style: :bold
-  #         layout_heading title, align: :right, style: :normal, size: 30
-  #       else
-  #         layout_heading part_number, align: :right, size: 100, color: [42, 1, 83, 1], style: :bold
-  #         layout_heading title, align: :right, color: [42, 1, 83, 1], style: :normal, size: 30
-  #       end
-  #     end
-  #
-  #     bounds.move_past_bottom
-  #   else
-  #     super # delegate to default implementation
-  #   end
-  # end
-  #
-  # def layout_heading_custom string, opts = {}
-  #   move_down 100
-  #   typeset_text string, calc_line_metrics((opts.delete :line_height) || @theme.heading_line_height), {
-  #     inline_format: true
-  #   }.merge(opts)
-  #   move_up 5
-  #   i = 0
-  #   underline = ''
-  #   while i < string.length
-  #     underline += if string == 'Dedication'
-  #                    '/////'
-  #                  else
-  #                    '//////'
-  #                  end
-  #     i += 1
-  #   end
-  #   underline += '////' if string == 'Dedication'
-  #   typeset_text underline, calc_line_metrics((opts.delete :line_height) || @theme.heading_line_height), {
-  #     inline_format: true, color: 'B0B0B0', size: 8, style: :italic
-  #   }.merge(opts)
-  #   move_down 20
-  # end
+  force chapters to start on new page;
+  force select chapters to start on the recto (odd-numbered, right-hand) page
+  def start_new_chapter chapter
+    start_new_page unless at_page_top?
+    if @ppbook && verso_page? && !(chapter.option? 'nonfacing')
+      update_colors # prevents Ghostscript from reporting a warning when running content is written to blank page
+      start_new_page
+    end
+  end
+  
+  def layout_chapter_title node, title, opts = {}
+    if (sect_id = node.id) == 'dedication' || sect_id == 'acknowledgements'
+      layout_heading_custom title, align: :center
+    elsif sect_id == 'colophon'
+      #puts 'Processing ' + node.sectname + '...'
+      if node.document.attr? 'media', 'prepress'
+        move_down 325
+      else
+        move_down 460
+      end
+      layout_heading title, size: @theme.base_font_size
+    elsif sect_id.include? 'chapter' # chapters
+      #puts 'Processing ' + sect_id + '...'
+      # use Akkurat font for all custom headings
+      font 'Akkurat' do
+        if node.document.attr? 'media', 'prepress'
+          move_down 120
+        else
+          move_down 180
+        end
+        if @ppbook
+          layout_heading 'PART', align: :right, size: 100, style: :normal
+        else
+          layout_heading 'PART', align: :right, size: 100, color: [91, 54, 8, 13], style: :normal
+        end
+        move_up 40
+  
+        part_number = 'ONE'
+        if sect_id.include? 'chapter-2'
+          part_number = 'TWO'
+        elsif sect_id.include? 'chapter-3'
+          part_number = 'THREE'
+        elsif sect_id.include? 'chapter-4'
+          part_number = 'FOUR'
+        elsif sect_id.include? 'chapter-5'
+          part_number = 'FIVE'
+        elsif sect_id.include? 'chapter-6'
+          part_number = 'SIX'
+        elsif sect_id.include? 'chapter-7'
+          part_number = 'SEVEN'
+        elsif sect_id.include? 'chapter-8'
+          part_number = 'EIGHT'
+        elsif sect_id.include? 'chapter-9'
+          part_number = 'NINE'
+        elsif sect_id.include? 'chapter-10'
+          part_number = 'TEN'
+        end
+        if @ppbook
+          layout_heading part_number, align: :right, size: 100, style: :bold
+          layout_heading title, align: :right, style: :normal, size: 30
+        else
+          layout_heading part_number, align: :right, size: 100, color: [42, 1, 83, 1], style: :bold
+          layout_heading title, align: :right, color: [42, 1, 83, 1], style: :normal, size: 30
+        end
+      end
+  
+      bounds.move_past_bottom
+    else
+      super # delegate to default implementation
+    end
+  end
+  
+  def layout_heading_custom string, opts = {}
+    move_down 100
+    typeset_text string, calc_line_metrics((opts.delete :line_height) || @theme.heading_line_height), {
+      inline_format: true
+    }.merge(opts)
+    move_up 5
+    i = 0
+    underline = ''
+    while i < string.length
+      underline += if string == 'Dedication'
+                     '/////'
+                   else
+                     '//////'
+                   end
+      i += 1
+    end
+    underline += '////' if string == 'Dedication'
+    typeset_text underline, calc_line_metrics((opts.delete :line_height) || @theme.heading_line_height), {
+      inline_format: true, color: 'B0B0B0', size: 8, style: :italic
+    }.merge(opts)
+    move_down 20
+  end
 end
 
 Asciidoctor::Pdf::Converter.prepend AsciidoctorPdfExtensions
