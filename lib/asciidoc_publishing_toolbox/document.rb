@@ -41,25 +41,27 @@ module AsciiDocPublishingToolbox
         :partnums:
         :sectnumsdepth: 5
         :xrefstyle: short
-        :copyright-year: 2019--2020
+        :copyright-year: #{@config.copyright[:fromYear]}#{"--#{@config.copyright[:toYear]}" if @config.copyright[:toYear]}
         :lang: #{@config.lang}
         #{Net::HTTP.get(URI.parse(lang_url))}
 
-        include::src/colophon.adoc[]
+        #{colophon}
 
         #{@config.chapters.map { |ch| "include::src/#{ch['title'].downcase.gsub(' ', '-')}.adoc[#{'leveloffset=+1' unless ch['part']}]" }.join("\n\n")}
       DOC
     end
 
-    def self.default_colophon
+    def colophon
       # TODO: Get colophon from JSON
       <<~COLOPHON
         [colophon#colophon%nonfacing]
         == {doctitle}
 
-        Copyright (c) {copyright-year}, {author}.
+        Copyright (c) {copyright-year}, #{@config.copyright[:holder] || '{author}'}.
 
-        _Created using ADPT, the AsciiDoc Publishing Toolbox_.
+        #{@config.copyright[:text] || ''}
+
+        #{'_Created using ADPT, the AsciiDoc Publishing Toolbox_.' unless @config.copyright[:adptNotice] == false}
       COLOPHON
     end
   end

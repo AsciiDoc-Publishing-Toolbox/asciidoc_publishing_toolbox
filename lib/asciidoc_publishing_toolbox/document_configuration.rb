@@ -2,6 +2,8 @@
 
 require 'json'
 require 'json_schemer'
+require 'date'
+require 'net/http'
 
 module AsciiDocPublishingToolbox
   # The document configuration.
@@ -9,7 +11,7 @@ module AsciiDocPublishingToolbox
   # This class exposes an interface to define a new configuration that's compliant
   # with the schema document.schema.json.
   class DocumentConfiguration
-    attr_reader :title, :authors, :type, :chapters, :lang
+    attr_reader :title, :authors, :type, :chapters, :lang, :copyright
     FILE_NAME = 'document.json'
     SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/document.schema.json'
 
@@ -129,6 +131,7 @@ module AsciiDocPublishingToolbox
       @type = opts[:type] || DocumentType::BOOK
       @chapters = validate_chapter_list opts[:chapters]
       @lang = (opts[:lang] || 'en').strip.downcase
+      @copyright = (opts[:copyright] || { fromYear: Date.today.year })
     end
 
     # Load an existing configuration
@@ -149,7 +152,8 @@ module AsciiDocPublishingToolbox
       else
         raise ArgumentError, "Unsupported type (#{configuration.class.name}) for 'configuration'" unless configuration.is_a? Hash
       end
-      schemer = JSONSchemer.schema(Pathname.new(File.join(__dir__, '../document.schema.json')))
+
+      schemer = JSONSchemer.schema(Net::HTTP.get(URI.parse(SCHEMA)))
       errors = schemer.validate(configuration).to_a
       raise InvalidConfigurationError, errors.to_s unless errors.empty?
 
@@ -160,7 +164,8 @@ module AsciiDocPublishingToolbox
       type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
       DocumentConfiguration.new title: configuration['title'], authors: authors,
                                 type: type, chapters: configuration['chapters'],
-                                lang: configuration['lang']
+                                lang: configuration['lang'],
+                                copyright: configuration['copyright'].transform_keys(&:to_sym)
     end
 
     # Check if the document is valid
@@ -203,7 +208,8 @@ module AsciiDocPublishingToolbox
         title: @title,
         authors: @authors,
         chapters: @chapters,
-        lang: @lang
+        lang: @lang,
+        copyright: @copyright
       }
     end
 

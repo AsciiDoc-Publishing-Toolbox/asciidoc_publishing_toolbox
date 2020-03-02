@@ -31,7 +31,6 @@ module AsciiDocPublishingToolbox
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
     FileUtils.mkdir_p File.join(opts[:dir], 'src')
-    File.write File.join(opts[:dir], 'src/colophon.adoc'), Document.default_colophon
     File.write File.join(opts[:dir], "src/#{opts[:first_chapter].downcase.gsub(' ', '-')}.adoc"), "= #{opts[:first_chapter]}"
   end
 
