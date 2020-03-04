@@ -35,6 +35,7 @@ module AsciiDocPublishingToolbox
       <<~DOC
         = #{@config.title}
         #{author_string.join('; ')}
+        #{version}
         :doctype: #{@config.type}
         :toc: left
         :sectnums:
@@ -49,6 +50,15 @@ module AsciiDocPublishingToolbox
 
         #{@config.chapters.map { |ch| "include::src/#{ch['title'].downcase.gsub(' ', '-')}.adoc[#{'leveloffset=+1' unless ch['part']}]" }.join("\n\n")}
       DOC
+    end
+
+    def version
+      return '// No version specified' unless @config.version
+
+      ver = "v#{@config.version[:number]}"
+      ver += ", #{@config.version[:date]}" if @config.version[:date]
+      ver += ": #{@config.version[:note]}" if @config.version[:note]
+      ver
     end
 
     def colophon

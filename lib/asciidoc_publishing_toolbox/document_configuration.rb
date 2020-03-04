@@ -11,7 +11,7 @@ module AsciiDocPublishingToolbox
   # This class exposes an interface to define a new configuration that's compliant
   # with the schema document.schema.json.
   class DocumentConfiguration
-    attr_reader :title, :authors, :type, :chapters, :lang, :copyright
+    attr_reader :title, :authors, :type, :chapters, :lang, :copyright, :version
     FILE_NAME = 'document.json'
     SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json'
 
@@ -132,6 +132,7 @@ module AsciiDocPublishingToolbox
       @chapters = validate_chapter_list opts[:chapters]
       @lang = (opts[:lang] || 'en').strip.downcase
       @copyright = (opts[:copyright] || { fromYear: Date.today.year })
+      @version = (opts[:version] || nil)
     end
 
     # Load an existing configuration
@@ -165,7 +166,8 @@ module AsciiDocPublishingToolbox
       DocumentConfiguration.new title: configuration['title'], authors: authors,
                                 type: type, chapters: configuration['chapters'],
                                 lang: configuration['lang'],
-                                copyright: configuration['copyright'].transform_keys(&:to_sym)
+                                copyright: configuration['copyright'].transform_keys(&:to_sym),
+                                version: configuration['version'].transform_keys(&:to_sym)
     end
 
     # Check if the document is valid
@@ -209,7 +211,8 @@ module AsciiDocPublishingToolbox
         authors: @authors,
         chapters: @chapters,
         lang: @lang,
-        copyright: @copyright
+        copyright: @copyright,
+        version: @version
       }
     end
 
