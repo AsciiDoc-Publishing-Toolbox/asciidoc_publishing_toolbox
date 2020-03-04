@@ -167,7 +167,7 @@ module AsciiDocPublishingToolbox
                                 type: type, chapters: configuration['chapters'],
                                 lang: configuration['lang'],
                                 copyright: configuration['copyright'].transform_keys(&:to_sym),
-                                version: configuration['version'].transform_keys(&:to_sym) || nil
+                                version: configuration['version'].transform_keys(&:to_sym) if configuration['version'] else nil
     end
 
     # Check if the document is valid
