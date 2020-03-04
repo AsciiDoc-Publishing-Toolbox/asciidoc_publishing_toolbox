@@ -162,12 +162,13 @@ module AsciiDocPublishingToolbox
       configuration['authors'].each do |author|
         authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
       end
+      version = configuration['version'].transform_keys(&:to_sym) rescue nil
       type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
       DocumentConfiguration.new title: configuration['title'], authors: authors,
                                 type: type, chapters: configuration['chapters'],
                                 lang: configuration['lang'],
                                 copyright: configuration['copyright'].transform_keys(&:to_sym),
-                                version: configuration['version'].transform_keys(&:to_sym) rescue nil
+                                version: version
     end
 
     # Check if the document is valid
