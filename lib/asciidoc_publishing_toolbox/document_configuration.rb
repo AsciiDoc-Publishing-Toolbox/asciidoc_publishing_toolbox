@@ -205,15 +205,16 @@ module AsciiDocPublishingToolbox
     #
     # @return [Hash] the hash representation of the configuration
     def to_hash
-      {
+      hash = {
         '$schema': DocumentConfiguration::SCHEMA,
         title: @title,
         authors: @authors,
         chapters: @chapters,
         lang: @lang,
         copyright: @copyright,
-        version: @version
       }
+      hash[:version] = @version if @version
+      hash
     end
 
     # Convert the configuration to JSON
