@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 module AsciiDocPublishingToolbox
-  # A utility class
-  class Utilities
+  # A utility module
+  module Utilities
+    module_function
+
     # Get an input from the user
     #
     # @param [String] prompt A message to prompt to the user
     # @return [String] The value given by the user (chomped).
-    def self.get_input(prompt = '')
+    def get_input(prompt = '')
       print prompt + ' '
       input = gets
       input.chomp
@@ -19,7 +21,7 @@ module AsciiDocPublishingToolbox
     # @param [String] error_message An error message to be printed in case of an
     #   empty string
     # @return [String] The given string (chomped).
-    def self.gets_not_empty(prompt = '', error_message = 'No value inserted.')
+    def gets_not_empty(prompt = '', error_message = 'No value inserted.')
       input = nil
       while input.nil? || input.empty?
         print error_message + ' ' unless input.nil?
@@ -32,7 +34,7 @@ module AsciiDocPublishingToolbox
     #
     # @return [Array<DocumentConfiguration::Author>] An array containing the
     #   given authors
-    def self.get_authors_input
+    def get_authors_input
       input = []
       loop do
         begin
@@ -71,7 +73,7 @@ module AsciiDocPublishingToolbox
     # @param [Boolean] create Whether or not the directory should be created (if
     #   it does not exist).
     # @raise [ArgumentError] if the given directory exists and overwrite is false.
-    def self.check_target_directory(dir, overwrite = false, create = false)
+    def check_target_directory(dir, overwrite = false, create = false)
       overwrite ||= false
       return if !create && !Dir.exist?(dir)
 

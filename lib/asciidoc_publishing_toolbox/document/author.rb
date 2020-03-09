@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AsciiDocPublishingToolbox
   module Document
     # The representation of an author.

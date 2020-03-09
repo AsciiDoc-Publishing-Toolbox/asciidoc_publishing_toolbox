@@ -6,10 +6,9 @@ require 'uri'
 module AsciiDocPublishingToolbox
   module Document
   # A document
-  #
-  # @!attribute [r] config
-  #   @return [DocumentConfiguration] The document configuration.
   class Document
+    # @return [AsciiDocPublishingToolbox::Document::DocumentConfiguration] The document configuration.
+    attr_reader :config
     # Create a new document
     #
     # @param [DocumentConfiguration] config The document configuration
@@ -29,9 +28,6 @@ module AsciiDocPublishingToolbox
         author_string << author.to_s
       end
 
-      # TODO: Add copyright year
-      # TODO: Add revision date
-      # TODO: Add language
       lang_url = "https://raw.githubusercontent.com/asciidoctor/asciidoctor/master/data/locale/attributes-#{@config.lang}.adoc"
       <<~DOC
         = #{@config.title}
@@ -63,7 +59,6 @@ module AsciiDocPublishingToolbox
     end
 
     def colophon
-      # TODO: Get colophon from JSON
       <<~COLOPHON
         [colophon#colophon%nonfacing]
         == {doctitle}

@@ -51,7 +51,7 @@ module AsciidoctorPdfExtensions
       end
       layout_heading title, size: @theme.base_font_size
     elsif sect_id.include? 'chapter' # chapters
-      #puts 'Processing ' + sect_id + '...'
+      # puts 'Processing ' + sect_id + '...'
       # use Akkurat font for all custom headings
       font 'Akkurat' do
         if node.document.attr? 'media', 'prepress'
