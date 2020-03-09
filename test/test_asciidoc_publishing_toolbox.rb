@@ -43,7 +43,7 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
       copyright: { fromYear: 2020 }
     }
 
-    authors = expected[:authors].map { |el| AsciiDocPublishingToolbox::DocumentConfiguration::Author.new el[:name], el[:surname], el[:email], el[:middlename] }
+    authors = expected[:authors].map { |el| AsciiDocPublishingToolbox::Document::Author.new el[:name], el[:surname], el[:email], el[:middlename] }
     AsciiDocPublishingToolbox::Utilities.check_target_directory target_dir, true, true
     AsciiDocPublishingToolbox.init dir: target_dir, overwrite: true, title: expected[:title], authors: authors,
                                    first_chapter: expected[:chapters][0][:title],

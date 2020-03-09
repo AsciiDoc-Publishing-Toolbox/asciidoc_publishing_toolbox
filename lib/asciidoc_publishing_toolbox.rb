@@ -3,8 +3,8 @@
 require 'fileutils'
 require 'asciidoctor'
 require 'asciidoc_publishing_toolbox/asciidoctor-pdf-extension'
-require 'asciidoc_publishing_toolbox/document_configuration'
-require 'asciidoc_publishing_toolbox/document'
+require 'asciidoc_publishing_toolbox/document/document_configuration'
+require 'asciidoc_publishing_toolbox/document/document'
 require 'asciidoc_publishing_toolbox/utilities'
 
 # The main module

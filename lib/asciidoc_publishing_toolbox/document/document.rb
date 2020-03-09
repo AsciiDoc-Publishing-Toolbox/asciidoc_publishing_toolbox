@@ -4,6 +4,7 @@ require 'net/http'
 require 'uri'
 
 module AsciiDocPublishingToolbox
+  module Document
   # A document
   #
   # @!attribute [r] config
@@ -75,4 +76,5 @@ module AsciiDocPublishingToolbox
       COLOPHON
     end
   end
+    end
 end
