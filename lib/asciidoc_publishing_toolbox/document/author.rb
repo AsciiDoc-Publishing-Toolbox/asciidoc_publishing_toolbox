@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AsciiDocPublishingToolbox
-  module Document
+  class Document
     # The representation of an author.
     class Author
       attr_reader :first_name, :surname, :email, :middle_name

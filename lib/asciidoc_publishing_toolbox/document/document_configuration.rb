@@ -5,9 +5,10 @@ require 'json_schemer'
 require 'date'
 require 'net/http'
 require 'asciidoc_publishing_toolbox/document/author'
+require 'asciidoc_publishing_toolbox/errors'
 
 module AsciiDocPublishingToolbox
-  module Document
+  class Document
     # The document configuration.
     #
     # This class exposes an interface to define a new configuration that's compliant
@@ -26,15 +27,6 @@ module AsciiDocPublishingToolbox
         end
       end
 
-      # An error that should be raised if a configuration is invalid.
-      class InvalidConfigurationError < StandardError
-        # Initialize the error
-        #
-        # @param msg The message.
-        def initialize(msg = 'The configuration file is not valid.')
-          super
-        end
-      end
       # Create a new empty document configuration
       def initialize(opts = {title: nil, authors: nil})
         @title = validate_title opts[:title] unless opts[:title].nil?

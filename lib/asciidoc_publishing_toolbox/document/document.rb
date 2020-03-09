@@ -4,7 +4,6 @@ require 'net/http'
 require 'uri'
 
 module AsciiDocPublishingToolbox
-  module Document
   # A document
   class Document
     # @return [AsciiDocPublishingToolbox::Document::DocumentConfiguration] The document configuration.
@@ -71,5 +70,4 @@ module AsciiDocPublishingToolbox
       COLOPHON
     end
   end
-    end
 end

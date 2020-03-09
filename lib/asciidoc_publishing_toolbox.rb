@@ -27,7 +27,7 @@ module AsciiDocPublishingToolbox
     opts[:dir] ||= Dir.pwd
     Utilities.check_target_directory opts[:dir], opts[:overwrite]
 
-    document_configuration = DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{ title: opts[:first_chapter] }]
+    document_configuration = Document::DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{ title: opts[:first_chapter] }]
     document_configuration.write_file opts[:dir]
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
@@ -37,7 +37,7 @@ module AsciiDocPublishingToolbox
 
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
-    document_configuration = DocumentConfiguration.load opts[:dir]
+    document_configuration = Document::DocumentConfiguration.load opts[:dir]
     out_dir = 'out'
     if Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.rm_rf(Dir[File.join(opts[:dir], out_dir, '**/*')])
@@ -53,11 +53,11 @@ module AsciiDocPublishingToolbox
   def new_chapter(title, opts = {})
     opts[:dir] ||= Dir.pwd
     opts[:is_part] ||= false
-    unless DocumentConfiguration.document? opts[:dir]
+    unless Document::DocumentConfiguration.document? opts[:dir]
       raise ArgumentError, 'The directory is not a document. The directory must be a valid document'
     end
 
-    doc = DocumentConfiguration.load Pathname.new(opts[:dir])
+    doc = Document::DocumentConfiguration.load Pathname.new(opts[:dir])
     doc.add_chapter(title, opts[:is_part])
     File.write File.join(opts[:dir], 'src', "#{title.downcase.gsub(' ', '-')}.adoc"),
                "= #{title}"
