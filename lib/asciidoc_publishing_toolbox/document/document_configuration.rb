@@ -105,6 +105,11 @@ module AsciiDocPublishingToolbox
         @chapters = validate_chapter_list @chapters, {title: title, part: is_part}
       end
 
+      def rename_chapter(chapter, new_title)
+        @chapters[chapter][:title] = new_title
+        raise ArgumentError unless validate_chapter_list @chapters
+      end
+
       # Convert the configuration to an hash object
       #
       # @return [Hash] the hash representation of the configuration
@@ -149,7 +154,7 @@ module AsciiDocPublishingToolbox
           end
           chapters << new_chap
         else
-          return chapters unless chapters.detect { |e| authors.count(e) > 1 }
+          return chapters unless chapters.detect { |e| chapters.count(e) > 1 }
         end
       end
 

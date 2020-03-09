@@ -27,7 +27,7 @@ module AsciiDocPublishingToolbox
     opts[:dir] ||= Dir.pwd
     Utilities.check_target_directory opts[:dir], opts[:overwrite]
 
-    document_configuration = Document::DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{ title: opts[:first_chapter] }]
+    document_configuration = Document::DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{title: opts[:first_chapter]}]
     document_configuration.write_file opts[:dir]
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
@@ -47,7 +47,7 @@ module AsciiDocPublishingToolbox
     document = Document.new document_configuration
 
     Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.html')
-    Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: { 'pdf-theme' => 'book', 'pdf-themesdir' => File.join(opts[:dir], 'themes'), 'media' => 'prepress' }
+    Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: {'pdf-theme' => 'book', 'pdf-themesdir' => File.join(opts[:dir], 'themes'), 'media' => 'prepress'}
   end
 
   def new_chapter(title, opts = {})
@@ -61,6 +61,25 @@ module AsciiDocPublishingToolbox
     doc.add_chapter(title, opts[:is_part])
     File.write File.join(opts[:dir], 'src', "#{title.downcase.gsub(' ', '-')}.adoc"),
                "= #{title}"
+    doc.write_file opts[:dir]
+  end
+
+  # Rename an existing chapter
+  # @param [Integer] chapter The chapter number.
+  # @param [String] new_title The new title.
+  def rename_chapter(chapter, new_title, opts = {})
+    opts[:dir] ||= Dir.pwd
+    opts[:is_part] ||= false
+    unless Document::DocumentConfiguration.document? opts[:dir]
+      raise ArgumentError, 'The directory is not a document. The directory must be a valid document'
+    end
+
+    doc = Document::DocumentConfiguration.load Pathname.new(opts[:dir])
+    old_file = "#{doc.chapters[chapter][:title].downcase.gsub(' ', '-')}.adoc"
+    doc.rename_chapter(chapter, new_title)
+    File.rename File.join(opts[:dir], 'src', old_file), File.join(opts[:dir], 'src', new_title.downcase.gsub(' ', ''))
+    # TODO: FIX AND REMOVE
+    puts 'WARNING: You must change the title in the document.'
     doc.write_file opts[:dir]
   end
 end

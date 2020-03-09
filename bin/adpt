@@ -20,8 +20,8 @@ HELP
 ARGV << '-h' if ARGV.empty?
 
 options = {
-  directory: Dir.pwd,
-  overwrite: false
+    directory: Dir.pwd,
+    overwrite: false
 }
 global = OptionParser.new do |opts|
   opts.banner = "Usage: #{EXECUTABLE_NAME} [options] [subcommand [options]]"
@@ -37,34 +37,37 @@ global = OptionParser.new do |opts|
 end
 
 subcommands = {
-  init: OptionParser.new do |opts|
-    opts.banner = 'Usage: init [options] DIR'
-    opts.separator "\nRequired arguments:\n"
-    opts.separator '    DIR    The output directory (if it does not exist, it will be created)'
-    opts.separator "\nOptions:\n"
-    opts.on('-o', '--overwrite', 'If the output directory is not empty, overwrite its content') do |o|
-      options[:overwrite] = o
+    init: OptionParser.new do |opts|
+      opts.banner = 'Usage: init [options] DIR'
+      opts.separator "\nRequired arguments:\n"
+      opts.separator '    DIR    The output directory (if it does not exist, it will be created)'
+      opts.separator "\nOptions:\n"
+      opts.on('-o', '--overwrite', 'If the output directory is not empty, overwrite its content') do |o|
+        options[:overwrite] = o
+      end
+    end,
+    build: OptionParser.new do |opts|
+      opts.banner = 'Usage: build [options]'
+      opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
+        options[:directory] = d
+      end
+      # TODO: Add build target options
+    end,
+    chap: OptionParser.new do |opts|
+      opts.banner = 'Usage: chap [options]'
+      opts.on('-t', '--title TITLE', 'Mandatory chapter title') do |t|
+        options[:new_chapter_title] = t
+      end
+      opts.on('-p', '--part', 'Set the chapter as a part') do |t|
+        options[:is_part] = t
+      end
+      opts.on('-r NUM', '--rename NUM', 'Rename the NUM chapter') do |r|
+        options[:has_to_rename] = r
+      end
+      opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
+        options[:directory] = d
+      end
     end
-  end,
-  build: OptionParser.new do |opts|
-    opts.banner = 'Usage: build [options]'
-    opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
-      options[:directory] = d
-    end
-    # TODO: Add build target options
-  end,
-  chap: OptionParser.new do |opts|
-    opts.banner = 'Usage: chap [options]'
-    opts.on('-t', '--title TITLE', 'Mandatory chapter title') do |t|
-      options[:new_chapter_title] = t
-    end
-    opts.on('-p', '--part', 'Set the chapter as a part') do |t|
-      options[:is_part] = t
-    end
-    opts.on('-d DIR', '--directory DIR', 'Set the input directory (default: current directory)') do |d|
-      options[:directory] = d
-    end
-  end
 }
 
 global.order!
@@ -103,7 +106,11 @@ when :build
 when :chap
   raise OptionParser::MissingArgument if options[:new_chapter_title].nil?
 
-  AsciiDocPublishingToolbox.new_chapter options[:new_chapter_title], dir: options[:directory], is_part: options[:is_part]
+  if options[:has_to_rename].nil?
+    AsciiDocPublishingToolbox.new_chapter options[:new_chapter_title], dir: options[:directory], is_part: options[:is_part]
+  else
+    AsciiDocPublishingToolbox.rename_chapter options[:has_to_rename].to_int, options[:new_chapter_title], dir: options[:directory], is_part: options[:is_part]
+  end
 else
   puts "The given command wasn't found"
   puts 'Use --help or -h to get a list of available commands'
