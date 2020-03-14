@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'json'
+require 'yaml'
 require 'json_schemer'
 require 'date'
 require 'net/http'
@@ -15,7 +15,7 @@ module AsciiDocPublishingToolbox
     # with the schema document.schema.json.
     class DocumentConfiguration
       attr_reader :title, :authors, :type, :chapters, :lang, :copyright, :version
-      FILE_NAME = 'document.json'
+      FILE_NAME = 'document.yml'
       SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json'
 
       module DocumentType
@@ -28,13 +28,13 @@ module AsciiDocPublishingToolbox
       end
 
       # Create a new empty document configuration
-      def initialize(opts = {title: nil, authors: nil})
+      def initialize(opts = { title: nil, authors: nil })
         @title = validate_title opts[:title] unless opts[:title].nil?
         @authors = validate_author_list opts[:authors] unless opts[:authors].nil?
         @type = opts[:type] || DocumentType::BOOK
         @chapters = validate_chapter_list opts[:chapters]
         @lang = (opts[:lang] || 'en').strip.downcase
-        @copyright = (opts[:copyright] || {fromYear: Date.today.year})
+        @copyright = (opts[:copyright] || { fromYear: Date.today.year })
         @version = (opts[:version] || nil)
       end
 
@@ -49,10 +49,9 @@ module AsciiDocPublishingToolbox
       def self.load(configuration)
         case configuration
         when String
-          configuration = JSON.parse configuration
+          configuration = YAML.safe_load configuration
         when Pathname
-          configuration = File.read configuration + FILE_NAME
-          configuration = JSON.parse configuration
+          configuration = YAML.load_file(configuration + FILE_NAME)
         else
           raise ArgumentError, "Unsupported type (#{configuration.class.name}) for 'configuration'" unless configuration.is_a? Hash
         end
@@ -102,7 +101,7 @@ module AsciiDocPublishingToolbox
       end
 
       def add_chapter(title, is_part = false)
-        @chapters = validate_chapter_list @chapters, {title: title, part: is_part}
+        @chapters = validate_chapter_list @chapters, { title: title, part: is_part }
       end
 
       def rename_chapter(chapter, new_title)
@@ -115,12 +114,11 @@ module AsciiDocPublishingToolbox
       # @return [Hash] the hash representation of the configuration
       def to_hash
         hash = {
-            '$schema': DocumentConfiguration::SCHEMA,
-            title: @title,
-            authors: @authors,
-            chapters: @chapters,
-            lang: @lang,
-            copyright: @copyright,
+          title: @title,
+          authors: @authors.map(&:to_hash),
+          chapters: @chapters,
+          lang: @lang,
+          copyright: @copyright
         }
         hash[:version] = @version if @version
         hash
@@ -128,10 +126,9 @@ module AsciiDocPublishingToolbox
 
       # Convert the configuration to JSON
       #
-      # @param opts
       # @return [String] The JSON representation of the configuration
-      def to_json(*opts)
-        JSON.pretty_generate(to_hash, *opts)
+      def to_yaml
+        to_hash.to_yaml
       end
 
       # Write the configuration to a JSON file
@@ -139,7 +136,7 @@ module AsciiDocPublishingToolbox
       # @param [String] directory The directory where the file will be stored
       def write_file(directory)
         File.open(File.join(directory, FILE_NAME), 'w') do |f|
-          f.write to_json
+          f.write to_yaml
         end
       end
 
@@ -148,7 +145,7 @@ module AsciiDocPublishingToolbox
       def validate_chapter_list(chapters, new_chap = nil)
         if new_chap
           chapters.each do |ch|
-            if ch[:title].downcase.gsub(' ', '-') == title.downcase.gsub(' ', '-')
+            if ch[:title].downcase.gsub(' ', '-') == new_chap[:title].downcase.gsub(' ', '-')
               raise ArgumentError, 'The chapter "ID" must be unique (title in lower case, with spaces replaced by hypens "-")'
             end
           end

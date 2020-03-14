@@ -43,7 +43,7 @@ module AsciiDocPublishingToolbox
       #
       # @return [Hash] The hash representation of the author
       def to_hash
-        dict = {name: @first_name, surname: @surname}
+        dict = { name: @first_name, surname: @surname }
         dict[:email] = @email unless @email.nil? || @email.empty?
         unless @middle_name.nil? || @middle_name.empty?
           dict[:middlename] = @middle_name
@@ -74,8 +74,8 @@ module AsciiDocPublishingToolbox
       #
       # @param opts
       # @return [String] the JSON representation of the author.
-      def to_json(*opts)
-        to_hash.to_json(*opts)
+      def to_yaml
+        to_hash.to_yaml
       end
 
       private

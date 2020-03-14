@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'asciidoc_publishing_toolbox'
 require 'fileutils'
 require 'json'
+require 'asciidoc_publishing_toolbox/document/document_configuration'
 
 class AsciiDocPublishingToolboxTest < Minitest::Test
   # def test_hi
@@ -14,7 +15,6 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
     target_dir = 'TESTING_DIRECTORY/'
 
     expected = {
-      '$schema': 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json',
       title: 'A test document',
       authors: [
         {
@@ -48,7 +48,7 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
     AsciiDocPublishingToolbox.init dir: target_dir, overwrite: true, title: expected[:title], authors: authors,
                                    first_chapter: expected[:chapters][0][:title],
                                    lang: expected[:lang], copyright: expected[:copyright]
-    actual = JSON.parse File.read(File.join(target_dir, 'document.json')), symbolize_names: true
+    actual = YAML.load_file File.join(target_dir, AsciiDocPublishingToolbox::Document::DocumentConfiguration::FILE_NAME)
 
     FileUtils.rmtree target_dir
 
