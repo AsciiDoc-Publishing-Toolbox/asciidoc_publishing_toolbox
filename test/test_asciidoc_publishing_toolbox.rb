@@ -3,7 +3,8 @@
 require 'minitest/autorun'
 require 'asciidoc_publishing_toolbox'
 require 'fileutils'
-require 'json'
+require 'faker'
+require 'yaml'
 require 'asciidoc_publishing_toolbox/document/document_configuration'
 
 class AsciiDocPublishingToolboxTest < Minitest::Test
@@ -11,47 +12,50 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
   #   assert_equal 'hello world', AsciiDocPublishingToolbox.hi
   # end
   #
+  TARGET_DIR = 'TESTING_DIRECTORY/'
+
   def test_init
-    target_dir = 'TESTING_DIRECTORY/'
+    3.times do
 
-    expected = {
-      title: 'A test document',
-      authors: [
-        {
-          name: 'Andrea',
-          surname: 'Esposito',
-          email: 'email@provider.com',
-        },
-        {
-          name: 'Second',
-          surname: 'Author',
-          middlename: 'Test'
-        },
-        {
-          name: 'Third',
-          surname: 'Author'
-        },
-        {
-          name: 'Fourth',
-          surname: 'Author',
-          middlename: 'Test',
-          email: 'test@test.com'
-        }
-      ],
-      chapters: [{ title: 'First Chapter Title' }],
-      lang: 'en',
-      copyright: { fromYear: 2020 }
-    }
+      authors = []
+      (1..Faker::Number.between(from: 1, to: 4)).each do |_|
+        first_name = Faker::Name.first_name
+        surname = Faker::Name.last_name
+        middlename = Faker::Boolean.boolean ? Faker::Name.middle_name : nil
+        email = Faker::Internet.safe_email name: "#{first_name} #{middlename ? middlename + ' ' + surname : surname}"
+        author = AsciiDocPublishingToolbox::Document::Author.new first_name, surname, email, middlename
+        authors << author
+      end
 
-    authors = expected[:authors].map { |el| AsciiDocPublishingToolbox::Document::Author.new el[:name], el[:surname], el[:email], el[:middlename] }
-    AsciiDocPublishingToolbox::Utilities.check_target_directory target_dir, true, true
-    AsciiDocPublishingToolbox.init dir: target_dir, overwrite: true, title: expected[:title], authors: authors,
-                                   first_chapter: expected[:chapters][0][:title],
-                                   lang: expected[:lang], copyright: expected[:copyright]
-    actual = YAML.load_file File.join(target_dir, AsciiDocPublishingToolbox::Document::DocumentConfiguration::FILE_NAME)
+      expected = {
+        title: Faker::Book.title,
+        authors: authors.map(&:to_hash),
+        chapters: [{ title: Faker::Book.title }],
+        lang: Faker::Nation.language.downcase[0..1],
+        copyright: { fromYear: Faker::Date.backward.year }
+      }
 
-    FileUtils.rmtree target_dir
+      has_to_overwrite = Faker::Boolean.boolean(true_ratio: 0)
 
-    assert_equal expected, actual
+
+      if !has_to_overwrite && Dir.exist?(TARGET_DIR)
+        assert_raises(ArgumentError) do
+          AsciiDocPublishingToolbox::Utilities.check_target_directory TARGET_DIR, has_to_overwrite, true
+        end
+      else
+        AsciiDocPublishingToolbox::Utilities.check_target_directory TARGET_DIR, has_to_overwrite, true
+        AsciiDocPublishingToolbox.init dir: TARGET_DIR, overwrite: has_to_overwrite, title: expected[:title], authors: authors,
+                                       first_chapter: expected[:chapters][0][:title],
+                                       lang: expected[:lang], copyright: expected[:copyright]
+        actual = YAML.load_file File.join(TARGET_DIR, AsciiDocPublishingToolbox::Document::DocumentConfiguration::FILE_NAME)
+        assert_equal expected, actual
+      end
+    end
   end
+
+  def teardown
+    FileUtils.rmtree TARGET_DIR
+  end
+
+
 end

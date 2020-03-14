@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    asciidoc_publishing_toolbox (0.0.16.alpha)
+    asciidoc_publishing_toolbox (0.1.0.alpha)
       asciidoctor (~> 2.0, >= 2.0.10)
       asciidoctor-pdf (~> 1.5, >= 1.5.3)
       json_schemer (~> 0.2, >= 0.2.10)
