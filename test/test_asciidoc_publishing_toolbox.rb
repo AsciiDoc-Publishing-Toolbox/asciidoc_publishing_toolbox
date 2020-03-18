@@ -48,7 +48,7 @@ class AsciiDocPublishingToolboxTest < Minitest::Test
                                        first_chapter: expected[:chapters][0][:title],
                                        lang: expected[:lang], copyright: expected[:copyright]
         actual = YAML.load_file File.join(TARGET_DIR, AsciiDocPublishingToolbox::Document::DocumentConfiguration::FILE_NAME)
-        assert_equal expected, actual
+        assert_equal expected.transform_keys(&:to_s), actual
       end
     end
   end

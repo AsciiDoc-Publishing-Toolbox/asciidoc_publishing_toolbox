@@ -44,7 +44,7 @@ module AsciiDocPublishingToolbox
                          get_input("Insert the #{input.length + 1}° author name (leave empty to stop):")
                        end
 
-          author = DocumentConfiguration::Author.from_string first_name
+          author = AsciiDocPublishingToolbox::Document::Author.from_string first_name
         rescue ArgumentError => e
           puts e.message
           retry
@@ -56,7 +56,7 @@ module AsciiDocPublishingToolbox
           middle_name = get_input "Insert the #{input.length + 1}° author middle name [default: '']:"
           email = get_input "Insert the #{input.length + 1}° author email [default: '']:"
 
-          author = DocumentConfiguration::Author.new first_name, surname, email, middle_name
+          author = AsciiDocPublishingToolbox::Document::Author.new first_name, surname, email, middle_name
         end
         input.push author
       end

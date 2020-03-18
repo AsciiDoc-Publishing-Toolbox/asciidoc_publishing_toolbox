@@ -75,7 +75,7 @@ module AsciiDocPublishingToolbox
       # @param opts
       # @return [String] the JSON representation of the author.
       def to_yaml
-        to_hash.to_yaml
+        to_hash.transform_keys(&:to_s).to_yaml
       end
 
       private
