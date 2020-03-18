@@ -145,6 +145,7 @@ module AsciiDocPublishingToolbox
       def validate_chapter_list(chapters, new_chap = nil)
         if new_chap
           chapters.each do |ch|
+            ch.transform_keys!(&:to_sym)
             if ch[:title].downcase.gsub(' ', '-') == new_chap[:title].downcase.gsub(' ', '-')
               raise ArgumentError, 'The chapter "ID" must be unique (title in lower case, with spaces replaced by hypens "-")'
             end
