@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.author = 'Andrea Esposito'
   s.email = 'esposito_andrea99@hotmail.com'
   s.files = Dir.glob('lib/**/*') + %w[LICENSE.md README.adoc]
-  s.homepage = 'https://espositoandrea.github.io/adpt.github.io'
+  s.homepage = 'https://asciidoc-publishing-toolbox.github.io/'
   s.executables << 'adpt'
   s.metadata = {
     'source_code_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox',
-    'homepage_uri' => 'https://espositoandrea.github.io/adpt.github.io',
+    'homepage_uri' => 'https://asciidoc-publishing-toolbox.github.io/',
     'bug_tracker_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox/issues'
   }
 
