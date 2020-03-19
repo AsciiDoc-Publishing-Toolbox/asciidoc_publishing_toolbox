@@ -16,7 +16,7 @@ module AsciiDocPublishingToolbox
     class DocumentConfiguration
       attr_reader :title, :authors, :type, :chapters, :lang, :copyright, :version
       FILE_NAME = 'document.yml'
-      SCHEMA = 'https://espositoandrea.github.io/adpt-document-schema/schemas/document.schema.json'
+      SCHEMA = 'https://asciidoc-publishing-toolbox.github.io/document-schema/schemas/document.schema.json'
 
       module DocumentType
         BOOK = 'book'
