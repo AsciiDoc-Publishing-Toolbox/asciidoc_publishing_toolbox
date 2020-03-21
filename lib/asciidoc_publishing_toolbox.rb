@@ -35,6 +35,11 @@ module AsciiDocPublishingToolbox
     File.write File.join(opts[:dir], "src/#{opts[:first_chapter].downcase.gsub(' ', '-')}.adoc"), "= #{opts[:first_chapter]}"
   end
 
+  # Build a document in both PDF and HTML format.
+  #
+  # @param [Hash] opts Various options for the generation
+  # @option opts [Pathname] :dir The directory containing the document. It 
+  #   defaults to the current working directory.
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]

@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.metadata = {
     'source_code_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox',
     'homepage_uri' => 'https://asciidoc-publishing-toolbox.github.io/',
+    'documentation_uri' => 'https://rubydoc.info/github/espositoandrea/asciidoc_publishing_toolbox/master',
     'bug_tracker_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox/issues'
   }
 

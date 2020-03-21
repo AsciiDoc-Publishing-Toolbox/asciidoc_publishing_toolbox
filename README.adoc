@@ -48,4 +48,4 @@ adpt build
 --------------
 
 You can edit the document configuration using a text editor: it's a JSON file
-that follows the link:https://raw.githubusercontent.com/espositoandrea/AsciiDoc-Publishing-Toolbox/master/lib/document.schema.json[ADPT's Document Schema].
+that follows the https://asciidoc-publishing-toolbox.github.io/document-schema[ADPT's Document Schema].
