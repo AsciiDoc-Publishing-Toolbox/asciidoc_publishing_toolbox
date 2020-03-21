@@ -39,10 +39,10 @@ module AsciiDocPublishingToolbox
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]
     out_dir = 'out'
-    if Dir.exist? File.join(opts[:dir], out_dir)
-      FileUtils.rm_rf(Dir[File.join(opts[:dir], out_dir, '**/*')])
-    else
+    unless Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.mkdir_p File.join(opts[:dir], out_dir)
+    # else
+    #   FileUtils.rm_rf(Dir[File.join(opts[:dir], out_dir, '**/*')])
     end
     document = Document.new document_configuration
 
