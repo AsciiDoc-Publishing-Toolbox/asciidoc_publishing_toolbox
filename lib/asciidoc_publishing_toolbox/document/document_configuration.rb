@@ -64,7 +64,10 @@ module AsciiDocPublishingToolbox
         configuration['authors'].each do |author|
           authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
         end
-        version = configuration['version'].transform_keys(&:to_sym) rescue nil
+        
+        version = configuration['versions'] rescue nil
+        version.map! { |el| el.transform_keys(&:to_sym) } if version
+
         type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
         DocumentConfiguration.new title: configuration['title'], authors: authors,
                                   type: type, chapters: configuration['chapters'],
@@ -122,6 +125,10 @@ module AsciiDocPublishingToolbox
         }
         hash[:version] = @version if @version
         hash
+      end
+
+      def current_version
+        unless @version.nil? || @version.empty? then version[0] else nil end
       end
 
       # Convert the configuration to JSON

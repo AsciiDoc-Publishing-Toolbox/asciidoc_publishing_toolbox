@@ -49,11 +49,11 @@ module AsciiDocPublishingToolbox
     end
 
     def version
-      return '// No version specified' unless @config.version
+      return '// No version specified' unless @config.current_version
 
-      ver = "v#{@config.version[:number]}"
-      ver += ", #{@config.version[:date]}" if @config.version[:date]
-      ver += ": #{@config.version[:note]}" if @config.version[:note]
+      ver = "v#{@config.current_version[:number]}"
+      ver += ", #{@config.current_version[:date]}" if @config.current_version[:date]
+      ver += ": #{@config.current_version[:note]}" if @config.current_version[:note]
       ver
     end
 
