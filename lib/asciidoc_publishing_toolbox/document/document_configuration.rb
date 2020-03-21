@@ -2,6 +2,7 @@
 
 require 'yaml'
 require 'json_schemer'
+require 'json'
 require 'date'
 require 'net/http'
 require 'asciidoc_publishing_toolbox/document/author'
@@ -135,7 +136,7 @@ module AsciiDocPublishingToolbox
       #
       # @return [String] The JSON representation of the configuration
       def to_yaml
-        to_hash.transform_keys(&:to_s).to_yaml
+        JSON.parse(JSON.dump(to_hash)).to_yaml
       end
 
       # Write the configuration to a JSON file
