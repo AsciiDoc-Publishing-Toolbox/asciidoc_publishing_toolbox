@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
   s.homepage = 'https://asciidoc-publishing-toolbox.github.io/'
   s.executables << 'adpt'
   s.metadata = {
-    'source_code_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox',
+    'source_code_uri' => 'https://github.com/AsciiDoc-Publishing-Toolbox/asciidoc_publishing_toolbox',
     'homepage_uri' => 'https://asciidoc-publishing-toolbox.github.io/',
-    'documentation_uri' => 'https://rubydoc.info/github/espositoandrea/asciidoc_publishing_toolbox/master',
-    'bug_tracker_uri' => 'https://github.com/espositoandrea/asciidoc_publishing_toolbox/issues'
+    'documentation_uri' => 'https://rubydoc.info/github/AsciiDoc-Publishing-Toolbox/asciidoc_publishing_toolbox/master',
+    'bug_tracker_uri' => 'https://github.com/AsciiDoc-Publishing-Toolbox/asciidoc_publishing_toolbox/issues'
   }
 
   s.add_runtime_dependency 'asciidoctor', '~> 2.0', '>= 2.0.10'
