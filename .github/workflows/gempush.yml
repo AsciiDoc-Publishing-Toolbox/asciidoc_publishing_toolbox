@@ -1,12 +1,8 @@
 name: Ruby Gem Build
 
 on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
+  release:
+    types: [created]
 
 jobs:
   build:
