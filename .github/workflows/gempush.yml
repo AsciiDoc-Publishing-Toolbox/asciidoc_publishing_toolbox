@@ -1,8 +1,9 @@
 name: Ruby Gem Build
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -32,7 +33,7 @@ jobs:
           gem push --KEY github --host https://rubygems.pkg.github.com/${OWNER} *.gem
         env:
           GEM_HOST_API_KEY: ${{secrets.GPR_AUTH_TOKEN}}
-          OWNER: espositoandrea
+          OWNER: AsciiDoc-Publishing-Toolbox
 
       - name: Publish to RubyGems
         run: |
