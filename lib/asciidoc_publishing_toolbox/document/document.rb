@@ -45,7 +45,26 @@ module AsciiDocPublishingToolbox
         #{colophon}
 
         #{@config.chapters.map { |ch| "include::src/#{ch['title'].downcase.gsub(' ', '-')}.adoc[#{'leveloffset=+1' unless ch['part']}]" }.join("\n\n")}
+
+        #{revision_history}
       DOC
+    end
+
+    def revision_history
+      return '// No version specified' if @config.version.nil? || @config.version.empty?
+      return '// revhistory option is false' if @config.options.nil? || !@config.options
+
+      <<~REV_HISTORY
+        [appendix]
+        == #{@config.options[:revhistoryLabel]}
+
+        .#{@config.options[:revhistoryLabel]}
+        [options="header", cols="^.^,^.^2,2*^.^3"]
+        |===
+        | {version-label} | Date | Description | Author
+        #{@config.version.map { |ver| "| #{ver[:number]} | #{ver[:date] || 'N/A'} | #{ver[:note] || 'N/A'} | #{ver[:author] || 'N/A'}" }.join("\n")}
+        |===
+      REV_HISTORY
     end
 
     def version

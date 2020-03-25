@@ -15,7 +15,7 @@ module AsciiDocPublishingToolbox
     # This class exposes an interface to define a new configuration that's compliant
     # with the schema document.schema.json.
     class DocumentConfiguration
-      attr_reader :title, :authors, :type, :chapters, :lang, :copyright, :version
+      attr_reader :title, :authors, :type, :chapters, :lang, :copyright, :version, :options
       FILE_NAME = 'document.yml'
       SCHEMA = 'https://asciidoc-publishing-toolbox.github.io/document-schema/schemas/document.schema.json'
 
@@ -37,6 +37,7 @@ module AsciiDocPublishingToolbox
         @lang = (opts[:lang] || 'en').strip.downcase
         @copyright = (opts[:copyright] || { fromYear: Date.today.year })
         @version = (opts[:version] || nil)
+        @options = (opts[:options] || nil)
       end
 
       # Load an existing configuration
@@ -65,16 +66,19 @@ module AsciiDocPublishingToolbox
         configuration['authors'].each do |author|
           authors << Author.new(author['name'], author['surname'], author['email'], author['middlename'])
         end
-        
+
         version = configuration['versions'] rescue nil
         version.map! { |el| el.transform_keys(&:to_sym) } if version
+
+        options = configuration['options'] rescue nil
+        options.transform_keys!(&:to_sym) if options
 
         type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
         DocumentConfiguration.new title: configuration['title'], authors: authors,
                                   type: type, chapters: configuration['chapters'],
                                   lang: configuration['lang'],
                                   copyright: configuration['copyright'].transform_keys(&:to_sym),
-                                  version: version
+                                  version: version, options: options
       end
 
       # Check if the document is valid
@@ -125,11 +129,16 @@ module AsciiDocPublishingToolbox
           copyright: @copyright
         }
         hash[:versions] = @version if @version
+        hash[:options] = @options if @options
         hash
       end
 
       def current_version
-        unless @version.nil? || @version.empty? then version[0] else nil end
+        unless @version.nil? || @version.empty? then
+          version[0]
+        else
+          nil
+        end
       end
 
       # Convert the configuration to JSON
