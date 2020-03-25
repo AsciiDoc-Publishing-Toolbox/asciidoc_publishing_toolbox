@@ -54,15 +54,17 @@ module AsciiDocPublishingToolbox
       return '// No version specified' if @config.version.nil? || @config.version.empty?
       return '// revhistory option is false' if @config.options.nil? || !@config.options
 
+      has_to_print_author = @config.version.any? { |h| !h[:author].nil? && !h[:author].empty? }
+
       <<~REV_HISTORY
         [appendix]
         == #{@config.options[:revhistoryLabel]}
 
         .#{@config.options[:revhistoryLabel]}
-        [options="header", cols="^.^,^.^2,2*^.^3"]
+        [options="header", cols="^.^,^.^2,#{'2*' if has_to_print_author}^.^3"]
         |===
-        | {version-label} | Date | Description | Author
-        #{@config.version.map { |ver| "| #{ver[:number]} | #{ver[:date] || 'N/A'} | #{ver[:note] || 'N/A'} | #{ver[:author] || 'N/A'}" }.join("\n")}
+        | {version-label} | Date | Description #{'| Author' if has_to_print_author}
+        #{@config.version.map { |ver| "| #{ver[:number]} | #{ver[:date] || 'N/A'} | #{ver[:note].gsub(/"(.*?)"/, '"`\1`"').gsub(/'(.*?)'/, '\'`\1`\'') || 'N/A'} #{"| #{ver[:author] || 'N/A'}" if has_to_print_author }" }.join("\n")}
         |===
       REV_HISTORY
     end
