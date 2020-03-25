@@ -124,7 +124,7 @@ module AsciiDocPublishingToolbox
           lang: @lang,
           copyright: @copyright
         }
-        hash[:version] = @version if @version
+        hash[:versions] = @version if @version
         hash
       end
 
