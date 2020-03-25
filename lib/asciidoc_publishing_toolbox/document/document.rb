@@ -54,6 +54,7 @@ module AsciiDocPublishingToolbox
       ver = "v#{@config.current_version[:number]}"
       ver += ", #{@config.current_version[:date]}" if @config.current_version[:date]
       ver += ": #{@config.current_version[:note]}" if @config.current_version[:note]
+      ver += " [#{@config.current_version[:author]}]" if @config.current_version[:author]
       ver
     end
 
