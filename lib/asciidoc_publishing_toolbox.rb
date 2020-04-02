@@ -44,7 +44,7 @@ module AsciiDocPublishingToolbox
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]
-    out_dir = File.join(opts[:dir], 'out')
+    out_dir = 'out'
     unless Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.mkdir_p File.join(opts[:dir], out_dir)
       # else
@@ -54,7 +54,7 @@ module AsciiDocPublishingToolbox
 
     html_document = Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true
     html_document.sub! '</head>', "<style>\n#{File.read File.join(opts[:dir], 'themes/style.css')}\n</style>\n</head>" if File.exist? File.join(opts[:dir], 'themes/style.css')
-    File.open(File.join(out_dir, document.file_name + '.html'), 'w') { |f| f.puts html_document }
+    File.open(File.join(opts[:dir], out_dir, document.file_name + '.html'), 'w') { |f| f.puts html_document }
 
     pdf_attributes = {
       'pdf-theme' => 'book',
