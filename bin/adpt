@@ -6,7 +6,6 @@ require 'asciidoc_publishing_toolbox'
 require 'asciidoc_publishing_toolbox/utilities'
 require 'asciidoc_publishing_toolbox/version'
 
-
 EXECUTABLE_NAME = 'adpt'
 
 subtext = <<~HELP

@@ -27,7 +27,7 @@ module AsciiDocPublishingToolbox
     opts[:dir] ||= Dir.pwd
     Utilities.check_target_directory opts[:dir], opts[:overwrite]
 
-    document_configuration = Document::DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{title: opts[:first_chapter]}],lang: opts[:lang], copyright: opts[:copyright]
+    document_configuration = Document::DocumentConfiguration.new title: opts[:title], authors: opts[:authors], chapters: [{ title: opts[:first_chapter] }], lang: opts[:lang], copyright: opts[:copyright]
     document_configuration.write_file opts[:dir]
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
@@ -44,21 +44,23 @@ module AsciiDocPublishingToolbox
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]
-    out_dir = 'out'
+    out_dir = File.join(opts[:dir], 'out')
     unless Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.mkdir_p File.join(opts[:dir], out_dir)
-    # else
-    #   FileUtils.rm_rf(Dir[File.join(opts[:dir], out_dir, '**/*')])
+      # else
+      #   FileUtils.rm_rf(Dir[File.join(opts[:dir], out_dir, '**/*')])
     end
     document = Document.new document_configuration
 
-    Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.html')
-    
+    html_document = Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true
+    html_document.sub! '</head>', "<style>\n#{File.read File.join(opts[:dir], 'themes/style.css')}\n</style>\n</head>" if File.exist? File.join(opts[:dir], 'themes/style.css')
+    File.open(File.join(out_dir, document.file_name + '.html'), 'w') { |f| f.puts html_document }
+
     pdf_attributes = {
       'pdf-theme' => 'book',
       'pdf-themesdir' => File.join(opts[:dir], 'themes'),
       'media' => 'prepress',
-      'pdf-fontsdir' => "#{File.join(opts[:dir], 'themes/fonts')};GEM_FONTS_DIR"
+      'pdf-fontsdir' => "GEM_FONTS_DIR,#{File.join(opts[:dir], 'themes/fonts')}"
     }
     Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: pdf_attributes
   end
