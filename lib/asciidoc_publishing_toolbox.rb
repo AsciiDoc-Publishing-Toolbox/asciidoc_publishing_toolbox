@@ -31,6 +31,7 @@ module AsciiDocPublishingToolbox
     document_configuration.write_file opts[:dir]
 
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
+    FileUtils.mkdir_p File.join(opts[:dir], 'themes/fonts')
     FileUtils.mkdir_p File.join(opts[:dir], 'src')
     File.write File.join(opts[:dir], "src/#{opts[:first_chapter].downcase.gsub(' ', '-')}.adoc"), "= #{opts[:first_chapter]}"
   end
@@ -52,7 +53,14 @@ module AsciiDocPublishingToolbox
     document = Document.new document_configuration
 
     Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.html')
-    Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: {'pdf-theme' => 'book', 'pdf-themesdir' => File.join(opts[:dir], 'themes'), 'media' => 'prepress'}
+    
+    pdf_attributes = {
+      'pdf-theme' => 'book',
+      'pdf-themesdir' => File.join(opts[:dir], 'themes'),
+      'media' => 'prepress',
+      'pdf-fontsdir' => "#{File.join(opts[:dir], 'themes/fonts')};GEM_FONTS_DIR"
+    }
+    Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: pdf_attributes
   end
 
   def new_chapter(title, opts = {})
