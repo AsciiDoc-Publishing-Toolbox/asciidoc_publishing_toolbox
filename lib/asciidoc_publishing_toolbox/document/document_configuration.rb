@@ -7,6 +7,7 @@ require 'date'
 require 'net/http'
 require 'asciidoc_publishing_toolbox/document/author'
 require 'asciidoc_publishing_toolbox/errors'
+require 'nokogiri'
 
 module AsciiDocPublishingToolbox
   class Document
@@ -36,8 +37,8 @@ module AsciiDocPublishingToolbox
         @chapters = validate_chapter_list opts[:chapters]
         @lang = (opts[:lang] || 'en').strip.downcase
         @copyright = (opts[:copyright] || { fromYear: Date.today.year })
-        @version = (opts[:version] || nil)
-        @options = (opts[:options] || nil)
+        @version = (opts[:version] || {})
+        @options = (opts[:options] || {})
       end
 
       # Load an existing configuration
@@ -70,7 +71,7 @@ module AsciiDocPublishingToolbox
         version = configuration['versions'] rescue nil
         version.map! { |el| el.transform_keys(&:to_sym) } if version
 
-        options = configuration['options'] rescue nil
+        options = configuration['options'] rescue {}
         options.transform_keys!(&:to_sym) if options
 
         type = DocumentType.value_for_name configuration['type'] rescue DocumentType::BOOK
@@ -128,8 +129,8 @@ module AsciiDocPublishingToolbox
           lang: @lang,
           copyright: @copyright
         }
-        hash[:versions] = @version if @version
-        hash[:options] = @options if @options
+        hash[:versions] = @version unless @version.nil? || @version.empty?
+        hash[:options] = @options unless @options.nil? || @options.empty?
         hash
       end
 

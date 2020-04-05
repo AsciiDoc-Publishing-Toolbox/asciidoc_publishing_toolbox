@@ -89,7 +89,7 @@ end
 
 case command
 when :init
-  options[:directory] = ARGV.shift
+  options[:directory] = ARGV.shift || Dir.pwd
   raise OptionParser::MissingArgument, 'The DIR argument is missing' unless options[:directory]
 
   AsciiDocPublishingToolbox::Utilities.check_target_directory options[:directory], options[:overwrite], true

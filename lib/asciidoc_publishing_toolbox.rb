@@ -44,7 +44,7 @@ module AsciiDocPublishingToolbox
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]
-    out_dir = 'out'
+    out_dir = /^github/.match(document_configuration.options[:target]) ? 'docs' : 'out'
     unless Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.mkdir_p File.join(opts[:dir], out_dir)
       # else
@@ -52,8 +52,23 @@ module AsciiDocPublishingToolbox
     end
     document = Document.new document_configuration
 
-    html_document = Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true
-    html_document.sub! '</head>', "<style>\n#{File.read File.join(opts[:dir], 'themes/style.css')}\n</style>\n</head>" if File.exist? File.join(opts[:dir], 'themes/style.css')
+    html_document = Nokogiri::HTML Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true
+    
+    if File.exist? File.join(opts[:dir], 'themes/style.css')
+      style_node = Nokogiri::XML::Node.new 'style', html_document
+      style_node.content = "\n#{File.read File.join(opts[:dir], 'themes/style.css')}\n"
+      head = html_document.at_css 'head'
+      head.add_child style_node
+    end
+    if /^github/.match document_configuration.options[:target]
+      parent_node = html_document.at_css "#header > .details"
+      new_node = Nokogiri::XML::Node.new 'a', html_document
+      new_node['href'] = "#{document.file_name}.pdf"
+      new_node['style'] = 'margin-left: auto;'
+      new_node['target'] = '_blank'
+      new_node.content = "View as PDF"
+      parent_node.add_child new_node
+    end
     File.open(File.join(opts[:dir], out_dir, document.file_name + '.html'), 'w') { |f| f.puts html_document }
 
     pdf_attributes = {

@@ -23,7 +23,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'asciidoctor', '~> 2.0', '>= 2.0.10'
   s.add_runtime_dependency 'asciidoctor-pdf', '~> 1.5', '>= 1.5.3'
   s.add_runtime_dependency 'json_schemer', '~> 0.2', '>= 0.2.10'
+  s.add_runtime_dependency 'nokogiri', '~> 1.10'
 
   s.add_development_dependency 'faker', '~> 2.10', '>= 2.10.2'
   s.add_development_dependency 'minitest', '~> 5.14', '>= 5.14.0'
+  s.add_development_dependency 'rake', '~> 13.0'
 end
