@@ -15,8 +15,15 @@ module AsciiDocPublishingToolbox
       @config = config
     end
 
-    def file_name
-      @config.title.downcase.gsub(' ', '-')
+    def file_name(extension = nil)
+      unless extension.nil? || extension.empty? 
+        extension = extension.downcase
+        return 'index.html' if extension == 'html' && /^github/.match(@config.options[:target])
+        
+        "#{@config.title.downcase.gsub(' ', '-')}.#{extension}"
+      else
+        @config.title.downcase.gsub(' ', '-')
+      end
     end
 
     # Get the document as string

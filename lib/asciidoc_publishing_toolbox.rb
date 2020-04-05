@@ -44,7 +44,8 @@ module AsciiDocPublishingToolbox
   def build(opts = {})
     opts[:dir] ||= Dir.pwd
     document_configuration = Document::DocumentConfiguration.load opts[:dir]
-    out_dir = /^github/.match(document_configuration.options[:target]) ? 'docs' : 'out'
+    target_is_github = /^github/.match(document_configuration.options[:target])
+    out_dir = target_is_github ? 'docs' : 'out'
     unless Dir.exist? File.join(opts[:dir], out_dir)
       FileUtils.mkdir_p File.join(opts[:dir], out_dir)
       # else
@@ -60,7 +61,7 @@ module AsciiDocPublishingToolbox
       head = html_document.at_css 'head'
       head.add_child style_node
     end
-    if /^github/.match document_configuration.options[:target]
+    if target_is_github
       parent_node = html_document.at_css "#header > .details"
       new_node = Nokogiri::XML::Node.new 'a', html_document
       new_node['href'] = "#{document.file_name}.pdf"
@@ -69,7 +70,7 @@ module AsciiDocPublishingToolbox
       new_node.content = "View as PDF"
       parent_node.add_child new_node
     end
-    File.open(File.join(opts[:dir], out_dir, document.file_name + '.html'), 'w') { |f| f.puts html_document }
+    File.open(File.join(opts[:dir], out_dir, document.file_name('html')), 'w') { |f| f.puts html_document }
 
     pdf_attributes = {
       'pdf-theme' => 'book',
