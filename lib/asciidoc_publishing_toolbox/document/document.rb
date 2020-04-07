@@ -2,6 +2,7 @@
 
 require 'net/http'
 require 'uri'
+require 'asciidoc_publishing_toolbox/document/strings'
 
 module AsciiDocPublishingToolbox
   # A document
@@ -48,6 +49,7 @@ module AsciiDocPublishingToolbox
         :copyright-year: #{@config.copyright[:fromYear]}#{"--#{@config.copyright[:toYear]}" if @config.copyright[:toYear]}
         :lang: #{@config.lang}
         #{Net::HTTP.get(URI.parse(lang_url))}
+        #{Strings.to_adoc Strings.strings(@config.lang)}
 
         #{colophon}
 
@@ -65,9 +67,9 @@ module AsciiDocPublishingToolbox
 
       <<~REV_HISTORY
         [appendix]
-        == #{@config.options[:revhistoryLabel]}
+        == {revhistory-label}
 
-        .#{@config.options[:revhistoryLabel]}
+        .{revhistory-label}
         [options="header", cols="^.^,^.^2,#{'2*' if has_to_print_author}^.^3"]
         |===
         | {version-label} | Date | Description #{'| Author' if has_to_print_author}
@@ -95,7 +97,7 @@ module AsciiDocPublishingToolbox
 
         #{@config.copyright[:text] || ''}
 
-        #{'_Created using ADPT, the AsciiDoc Publishing Toolbox_.' unless @config.copyright[:adptNotice] == false}
+        #{'_{created-with-adpt-notice}_.' unless @config.copyright[:adptNotice] == false}
       COLOPHON
     end
   end
