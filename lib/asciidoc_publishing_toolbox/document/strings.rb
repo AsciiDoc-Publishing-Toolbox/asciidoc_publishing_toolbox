@@ -6,7 +6,7 @@ module AsciiDocPublishingToolbox
       @@strings = {
         it: {
           'revhistory-label': 'Storico delle revisioni',
-          'created-with-adpt-notice': 'Creato utilizzando ADPT, la Toolbox per la Publlicazione in AsciiDoc',
+          'created-with-adpt-notice': 'Creato utilizzando ADPT, la Toolbox per la Pubblicazione in AsciiDoc',
         },
         en: {
           'revhistory-label': 'Revision History',
