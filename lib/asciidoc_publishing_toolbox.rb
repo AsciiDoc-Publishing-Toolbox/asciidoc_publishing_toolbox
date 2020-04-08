@@ -33,7 +33,7 @@ module AsciiDocPublishingToolbox
     FileUtils.cp_r File.join(__dir__, 'data/.'), opts[:dir]
     FileUtils.mkdir_p File.join(opts[:dir], 'themes/fonts')
     FileUtils.mkdir_p File.join(opts[:dir], 'src')
-    File.write File.join(opts[:dir], "src/#{opts[:first_chapter].downcase.gsub(' ', '-')}.adoc"), "= #{opts[:first_chapter]}"
+    File.write File.join(opts[:dir], "src/#{opts[:first_chapter].downcase.gsub(/:? /, '-')}.adoc"), "= #{opts[:first_chapter]}"
   end
 
   # Build a document in both PDF and HTML format.
@@ -90,7 +90,7 @@ module AsciiDocPublishingToolbox
 
     doc = Document::DocumentConfiguration.load Pathname.new(opts[:dir])
     doc.add_chapter(title, opts[:is_part])
-    File.write File.join(opts[:dir], 'src', "#{title.downcase.gsub(' ', '-')}.adoc"),
+    File.write File.join(opts[:dir], 'src', "#{title.downcase.gsub(/:? /, '-')}.adoc"),
                "= #{title}\n"
     doc.write_file opts[:dir]
   end

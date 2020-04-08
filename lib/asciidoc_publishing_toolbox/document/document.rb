@@ -21,9 +21,9 @@ module AsciiDocPublishingToolbox
         extension = extension.downcase
         return 'index.html' if extension == 'html' && /^github/.match(@config.options[:target])
         
-        "#{@config.title.downcase.gsub(' ', '-')}.#{extension}"
+        "#{@config.title.downcase.gsub(/:? /, '-')}.#{extension}"
       else
-        @config.title.downcase.gsub(' ', '-')
+        @config.title.downcase.gsub(/:? /, '-')
       end
     end
 
