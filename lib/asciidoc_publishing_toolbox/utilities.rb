@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'i18n'
+
 module AsciiDocPublishingToolbox
   # A utility module
   module Utilities
@@ -81,6 +83,19 @@ module AsciiDocPublishingToolbox
       return if overwrite || Dir.empty?(dir)
 
       raise ArgumentError, 'The given directory exists and is not empty'
+    end
+
+    # Get an ID from a string.
+    #
+    # @param string [String] The input string.
+    # @return [String] The ID.
+    def get_id(string)
+      I18n.available_locales = [:en]
+      string = string.strip
+      string.downcase!
+      string = I18n.transliterate string
+      string.gsub! /[^a-zA-Z0-9\s]/, ''
+      string.gsub /\s+/, '-'
     end
   end
 end

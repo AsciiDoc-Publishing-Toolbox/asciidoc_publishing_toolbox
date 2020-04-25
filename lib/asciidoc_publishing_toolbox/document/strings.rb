@@ -5,12 +5,12 @@ module AsciiDocPublishingToolbox
     class Strings
       @@strings = {
         it: {
-          'revhistory-label': 'Storico delle revisioni',
-          'created-with-adpt-notice': 'Creato utilizzando ADPT, la Toolbox per la Pubblicazione in AsciiDoc',
+          'revhistory-label' => 'Storico delle revisioni',
+          'created-with-adpt-notice' => 'Creato utilizzando ADPT, la Toolbox per la Pubblicazione in AsciiDoc',
         },
         en: {
-          'revhistory-label': 'Revision History',
-          'created-with-adpt-notice': 'Created using ADPT, the AsciiDoc Publishing Toolbox',
+          'revhistory-label' => 'Revision History',
+          'created-with-adpt-notice' => 'Created using ADPT, the AsciiDoc Publishing Toolbox',
         },
       }
 
@@ -23,7 +23,7 @@ module AsciiDocPublishingToolbox
 
       def self.to_adoc(strings)
         out = ''
-        strings.each { |k, v| out += ":#{k.to_s.strip}: #{v.strip}\n" }
+        strings.each { |k, v| out += "#{k.strip}: #{v.strip}\n" }
         out
       end
     end

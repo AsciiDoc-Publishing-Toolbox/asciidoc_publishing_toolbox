@@ -1,10 +1,12 @@
 PATH
   remote: .
   specs:
-    asciidoc_publishing_toolbox (0.1.10.alpha)
+    asciidoc_publishing_toolbox (0.1.13.alpha)
       asciidoctor (~> 2.0, >= 2.0.10)
       asciidoctor-pdf (~> 1.5, >= 1.5.3)
+      i18n (~> 1.8, >= 1.8.1)
       json_schemer (~> 0.2, >= 0.2.10)
+      nokogiri (~> 1.10)
 
 GEM
   remote: https://rubygems.org/
@@ -29,7 +31,7 @@ GEM
     concurrent-ruby (1.1.6)
     css_parser (1.7.1)
       addressable
-    ecma-re-validator (0.2.0)
+    ecma-re-validator (0.2.1)
       regexp_parser (~> 1.2)
     faker (2.10.2)
       i18n (>= 1.6, < 2)
@@ -69,7 +71,7 @@ GEM
     prawn-templates (0.1.2)
       pdf-reader (~> 2.0)
       prawn (~> 2.2)
-    public_suffix (4.0.3)
+    public_suffix (4.0.4)
     rake (13.0.1)
     regexp_parser (1.7.0)
     ruby-rc4 (0.1.5)
@@ -88,7 +90,6 @@ DEPENDENCIES
   asciidoc_publishing_toolbox!
   faker (~> 2.10, >= 2.10.2)
   minitest (~> 5.14, >= 5.14.0)
-  nokogiri (~> 1.10)
   rake (~> 13.0)
 
 BUNDLED WITH

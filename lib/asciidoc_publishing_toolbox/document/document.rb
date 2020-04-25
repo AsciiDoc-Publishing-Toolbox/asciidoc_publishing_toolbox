@@ -3,6 +3,7 @@
 require 'net/http'
 require 'uri'
 require 'asciidoc_publishing_toolbox/document/strings'
+require 'asciidoc_publishing_toolbox/utilities'
 
 module AsciiDocPublishingToolbox
   # A document
@@ -21,9 +22,9 @@ module AsciiDocPublishingToolbox
         extension = extension.downcase
         return 'index.html' if extension == 'html' && /^github/.match(@config.options[:target])
         
-        "#{@config.title.downcase.gsub(/:? /, '-')}.#{extension}"
+        "#{Utilities.get_id @config.title}.#{extension}"
       else
-        @config.title.downcase.gsub(/:? /, '-')
+        Utilities.get_id @config.title
       end
     end
 
@@ -49,7 +50,6 @@ module AsciiDocPublishingToolbox
         :copyright-year: #{@config.copyright[:fromYear]}#{"--#{@config.copyright[:toYear]}" if @config.copyright[:toYear]}
         :lang: #{@config.lang}
         #{Net::HTTP.get(URI.parse(lang_url))}
-        #{Strings.to_adoc Strings.strings(@config.lang)}
 
         #{colophon}
 
@@ -67,13 +67,13 @@ module AsciiDocPublishingToolbox
 
       <<~REV_HISTORY
         [appendix]
-        == {revhistory-label}
+        == #{Strings.strings(@config.lang)['revhistory-label']}
 
-        .{revhistory-label}
+        .#{Strings.strings(@config.lang)['revhistory-label']}
         [options="header", cols="^.^,^.^2,#{'2*' if has_to_print_author}^.^3"]
         |===
         | {version-label} | Date | Description #{'| Author' if has_to_print_author}
-        #{@config.version.map { |ver| "| #{ver[:number]} | #{ver[:date] || 'N/A'} | #{ver[:note].gsub(/"(.*?)"/, '"`\1`"').gsub(/'(.*?)'/, '\'`\1`\'') || 'N/A'} #{"| #{ver[:author] || 'N/A'}" if has_to_print_author }" }.join("\n")}
+        #{@config.version.map { |ver| "| #{ver[:number]} | #{ver[:date] || 'N/A'} | #{ver[:note].gsub(/"(.*?)"/, '"`\1`"').gsub(/'(.*?)'/, '\'`\1`\'') rescue 'N/A'} #{"| #{ver[:author] || 'N/A'}" if has_to_print_author }" }.join("\n")}
         |===
       REV_HISTORY
     end
@@ -97,7 +97,7 @@ module AsciiDocPublishingToolbox
 
         #{@config.copyright[:text] || ''}
 
-        #{'_{created-with-adpt-notice}_.' unless @config.copyright[:adptNotice] == false}
+        #{"_#{Strings.strings(@config.lang)['created-with-adpt-notice']}_." unless @config.copyright[:adptNotice] == false}
       COLOPHON
     end
   end
