@@ -53,7 +53,14 @@ module AsciiDocPublishingToolbox
     end
     document = Document.new document_configuration
 
-    html_document = Nokogiri::HTML Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true
+    common_options = {
+      'allow-uri-read' => true
+    }
+
+    html_attributes = {}
+    html_attributes = common_options.merge html_attributes
+
+    html_document = Nokogiri::HTML Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'html', safe: :safe, header_footer: true, attributes: html_attributes
     
     if File.exist? File.join(opts[:dir], 'themes/style.css')
       style_node = Nokogiri::XML::Node.new 'style', html_document
@@ -78,6 +85,7 @@ module AsciiDocPublishingToolbox
       'media' => 'prepress',
       'pdf-fontsdir' => "GEM_FONTS_DIR,#{File.join(opts[:dir], 'themes/fonts')}"
     }
+    pdf_attributes = common_options.merge pdf_attributes
     Asciidoctor.convert document.to_s, base_dir: opts[:dir], backend: 'pdf', safe: :safe, header_footer: true, to_file: File.join(out_dir, document.file_name + '.pdf'), attributes: pdf_attributes
   end
 
